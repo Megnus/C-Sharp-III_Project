@@ -1,0 +1,6 @@
+C:\source\lab\Kurser\C# III - Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\bin\Debug\WebScrapeConsoleTest.exe.config
+C:\source\lab\Kurser\C# III - Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\obj\Debug\WebScrapeConsoleTest.csprojResolveAssemblyReference.cache
+C:\source\lab\Kurser\C# III - Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\bin\Debug\WebScrapeConsoleTest.exe
+C:\source\lab\Kurser\C# III - Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\bin\Debug\WebScrapeConsoleTest.pdb
+C:\source\lab\Kurser\C# III - Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\obj\Debug\WebScrapeConsoleTest.exe
+C:\source\lab\Kurser\C# III - Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\obj\Debug\WebScrapeConsoleTest.pdb
