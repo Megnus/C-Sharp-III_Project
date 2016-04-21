@@ -21,7 +21,9 @@ namespace WebScrapeConsoleTest
             {
                 //WebClient webClient = new WebClient();
                 //const string strUrl = "http://www.timeapi.org/utc/now";
-                const string strUrl = "http://www.dn.se";
+                //const string strUrl = "http://www.dn.se";
+                //const string strUrl = "http://www.torget.se/personer/11666/-/1/";
+                const string strUrl = "http://www.torget.se/personer/Stockholm/TA_79779/";
                 byte[] reqHTML;
 
                 webClient.Headers.Add("User-Agent: Other");
@@ -31,15 +33,25 @@ namespace WebScrapeConsoleTest
                 /*
                 var arr = arrayx.Where(x => x.Contains("vader")).ToList<string>();*/
 
-                Match match = Regex.Match(objUTF8.GetString(reqHTML), "(?<=href=\").+?(?=\")",
-                    RegexOptions.IgnoreCase);
+                List<string> array = objUTF8.GetString(reqHTML).Split().ToList<string>();
+                var arr = array.Where(x => x.Contains("itemprop=\"name\"")).ToList<string>();
+                //arr.ForEach(x => Console.WriteLine(x));
+                Console.WriteLine(objUTF8.GetString(reqHTML));
+
+
+                Console.WriteLine("-----------------------------------");
+
+                //Match match = Regex.Match(objUTF8.GetString(reqHTML), "(?<=href=\").+?(?=\")",
+                //    RegexOptions.IgnoreCase);
+
+                Match match = Regex.Match(objUTF8.GetString(reqHTML), "(?<=itemprop=\"name\">).+?(?=</span>)", RegexOptions.Singleline);
 
                 while (match.Success)
                 {
                     Console.WriteLine(match.Value);
                     match = match.NextMatch();
                 }
-              
+
                 //List<string> array = objUTF8.GetString(reqHTML).Split().ToList<string>();
                 //var arrayx = array.Where(x => !String.IsNullOrEmpty(x)).ToList();
                 //Regex regex = new Regex("src=\".*\"");
