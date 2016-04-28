@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace WebScrapeConsoleTest
+{
+    class DatabaseHandler
+    {
+        public DatabaseHandler()
+        {
+            using (var db = new PersonContext())
+            {
+                db.Persons.Where(x => x.Id > 99500).ToList().ForEach(x => Console.WriteLine(x.Name));
+            }
+
+            if (true) return;
+
+            for (int i = 0; i < 100000; i++)
+            {
+                using (var db = new PersonContext())
+                {
+                    var persons = new Person()
+                    {
+                        Name = i + ": Magnus Sundström",
+                        BirthDate = (DateTime.Today).ToString(),
+                        Phone = "070-3945876",
+                        Link = "/bla/bla/..",
+                        Address = new Address()
+                        {
+                            Street = "Metargatan",
+                            XCoord = 1.001,
+                            YCoord = 1.002,
+                            Postal = new Postal()
+                            {
+                                City = "Stockholm",
+                                PostalCode = 10405
+                            }
+                        }
+                    };
+                    db.Persons.Add(persons);
+                    Console.WriteLine(persons.Name);
+                    db.SaveChanges();
+                }
+            }
+
+        }
+    }
+}
