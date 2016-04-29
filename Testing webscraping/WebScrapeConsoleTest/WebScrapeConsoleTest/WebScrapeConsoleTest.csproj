@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Address.cs" />
     <Compile Include="DatabaseHandler.cs" />
+    <Compile Include="ObjectMapper.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="PersonContext.cs" />
     <Compile Include="Postal.cs" />

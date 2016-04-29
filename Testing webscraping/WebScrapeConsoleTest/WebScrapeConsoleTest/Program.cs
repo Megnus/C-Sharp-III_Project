@@ -10,15 +10,39 @@ using Newtonsoft.Json;
 
 namespace WebScrapeConsoleTest
 {
+    public class Test
+    {
+        public string PostalId { get; set; }
+
+        public string PostalCode { get; set; }
+
+        public string City { get; set; }
+    }
+
+    public class Tester
+    {
+        public string PostalId { get; set; }
+
+        public string PostalCode { get; set; }
+
+        public string City { get; set; }
+    }
+
     class Program
     {
-        /// <summary>
         /// http://www.dotnetperls.com/webclient
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            new DatabaseHandler();
+            //new DatabaseHandler();
+            Test test = new Test();
+            test.City = "New York!";
+            //ObjectMapper.GetProperites(test);
+            Tester tester = ObjectMapper<Tester>.Map(test);
+            
+            Console.WriteLine(tester.City);
+
 
             if (true) return;
 
