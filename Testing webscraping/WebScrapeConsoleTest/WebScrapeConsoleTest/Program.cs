@@ -31,71 +31,45 @@ namespace WebScrapeConsoleTest
     class Program
     {
         /// http://www.dotnetperls.com/webclient
+        /// https://msdn.microsoft.com/en-us/library/dd997305(v=vs.110).aspx
+        /// https://msdn.microsoft.com/en-us/library/dd267265(v=vs.110).aspx
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            //new DatabaseHandler();
-            Test test = new Test();
-            test.City = "New York!";
-            //ObjectMapper.GetProperites(test);
-            Tester tester = ObjectMapper<Tester>.Map(test);
-            
-            Console.WriteLine(tester.City);
+            //new WebClientHandler(79779);
+            SiteInformationHandler<StaticMapData> siteInformationHandler =
+                new SiteInformationHandler<StaticMapData>("http://www.torget.se/personer/Stockholm/TA_{0}/");
 
+            siteInformationHandler.SetIndex(79779);
 
-            if (true) return;
-
-            using (WebClient webClient = new WebClient())
+            while (true)
             {
-                //WebClient webClient = new WebClient();
-                //const string strUrl = "http://www.timeapi.org/utc/now";
-                //const string strUrl = "http://www.dn.se";
-                //const string strUrl = "http://www.torget.se/personer/11666/-/1/";
-                const string strUrl = "http://www.torget.se/personer/Stockholm/TA_79779/";
-                byte[] reqHTML;
-
-                webClient.Headers.Add("User-Agent: Other");
-                reqHTML = webClient.DownloadData(strUrl);
-                UTF8Encoding objUTF8 = new UTF8Encoding();
-
-                /*
-                var arr = arrayx.Where(x => x.Contains("vader")).ToList<string>();*/
-
-                List<string> array = objUTF8.GetString(reqHTML).Split().ToList<string>();
-                var arr = array.Where(x => x.Contains("itemprop=\"name\"")).ToList<string>();
-                //arr.ForEach(x => Console.WriteLine(x));
-                Console.WriteLine(objUTF8.GetString(reqHTML));
-
-
-                Console.WriteLine("-----------------------------------");
-
-                //Match match = Regex.Match(objUTF8.GetString(reqHTML), "(?<=href=\").+?(?=\")",
-                //RegexOptions.IgnoreCase);
-
-                Match match = Regex.Match(objUTF8.GetString(reqHTML), "(?<=itemprop=\"name\">).+?(?=</span>)", RegexOptions.Singleline);
-                
-                //The new regex
-                //(?<=var\sstaticMapData\s=\s\[).+?(?=\];)
-
-                while (match.Success)
+                if (!siteInformationHandler.GetNextIndex())
                 {
-                    Console.WriteLine(match.Value);
-                    match = match.NextMatch();
+                    continue;
                 }
 
-                //List<string> array = objUTF8.GetString(reqHTML).Split().ToList<string>();
-                //var arrayx = array.Where(x => !String.IsNullOrEmpty(x)).ToList();
-                //Regex regex = new Regex("src=\".*\"");
-                //var regarray = arrayx.Where(x => regex.Match(x).Success).ToList();
-                //regarray.ForEach(x => Console.WriteLine(x));
+                StaticMapData staticMapData =
+                    siteInformationHandler.GetSerializedData("(?<=var\\sstaticMapData\\s=\\s\\[).+?(?=\\];)", RegexOptions.Singleline);
+
+                staticMapData.Birthday =
+                    siteInformationHandler.GetStringData("(?<=födelsedag\\n<\\/h2>\n<p>).+?(?=<br\\/>)", RegexOptions.Singleline);
+
+                Person person = staticMapData.GetPerson();
+
+                using (var db = new PersonContext())
+                {
+                    db.Persons.Add(person);
+                    db.SaveChanges();
+                }
 
             }
-            Console.ReadKey();
 
+            Console.ReadKey();
         }
 
-        static void secondMain(string[] args)
+       /* static void secondMain(string[] args)
         {
             string jsonMapData = @"
                 {
@@ -113,11 +87,11 @@ namespace WebScrapeConsoleTest
             string birthDate = "januari 04";
 
             StaticMapData staticMapData = JsonConvert.DeserializeObject<StaticMapData>(jsonMapData);
-            Person person = MigrateData(staticMapData, birthDate);
+            Person person = MigrateData(staticMapData);
             Console.WriteLine(person.Name);
         }
 
-        private static Person MigrateData(StaticMapData staticMapData, string birthDate)
+        private static Person MigrateData(StaticMapData staticMapData)
         {
             return new Person()
             {
@@ -125,7 +99,7 @@ namespace WebScrapeConsoleTest
                 Name = staticMapData.Name,
                 Phone = staticMapData.Phone,
                 Link = staticMapData.Link,
-                BirthDate = birthDate,
+                BirthDate = staticMapData.Birthday,
                 Address = new Address()
                 {
                     Street = staticMapData.Addr1,
@@ -138,7 +112,7 @@ namespace WebScrapeConsoleTest
                     }
                 }
             };
-        }
+        }*/
     }
 
     public class StaticMapData
@@ -146,20 +120,45 @@ namespace WebScrapeConsoleTest
         public int Id { get; set; }
 
         public string Name { get; set; }
-        
+
         public double CoordY { get; set; }
-        
+
         public double CoordX { get; set; }
-        
+
         public string Addr1 { get; set; }
-        
+
         public int PostalCode { get; set; }
-        
+
         public string City { get; set; }
-        
+
         public string Phone { get; set; }
-        
+
         public string Link { get; set; }
+
+        public string Birthday { get; set; }
+
+        public Person GetPerson()
+        {
+            return new Person()
+            {
+                Id = this.Id,
+                Name = this.Name,
+                Phone = this.Phone,
+                Link = this.Link,
+                BirthDate = this.Birthday,
+                Address = new Address()
+                {
+                    Street = this.Addr1,
+                    XCoord = this.CoordX,
+                    YCoord = this.CoordY,
+                    Postal = new Postal()
+                    {
+                        City = this.City,
+                        PostalCode = this.PostalCode
+                    }
+                }
+            };
+        }
     }
 }
 

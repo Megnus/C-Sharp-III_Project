@@ -17,6 +17,15 @@ namespace WebScrapeConsoleTest
       
     public class ObjectMapper<T>
     {
+        /*
+                    //new DatabaseHandler();
+            Test test = new Test();
+            test.City = "New York!";
+            //ObjectMapper.GetProperites(test);
+            Tester tester = ObjectMapper<Tester>.Map(test);
+            
+            Console.WriteLine(tester.City);*/
+
         Dictionary<string, PropertyInfo> properties;
 
         public ObjectMapper()
