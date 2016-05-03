@@ -26,7 +26,7 @@ namespace WebScrapeConsoleTest
                         Name = i + ": Magnus Sundström",
                         BirthDate = (DateTime.Today).ToString(),
                         Phone = "070-3945876",
-                        Link = "/bla/bla/..",
+                        //Link = "/bla/bla/..",
                         Address = new Address()
                         {
                             Street = "Metargatan",
@@ -35,7 +35,7 @@ namespace WebScrapeConsoleTest
                             Postal = new Postal()
                             {
                                 City = "Stockholm",
-                                PostalCode = 10405
+                                PostalCode = "10405"
                             }
                         }
                     };

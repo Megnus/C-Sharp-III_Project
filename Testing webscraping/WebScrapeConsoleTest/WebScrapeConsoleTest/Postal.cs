@@ -10,7 +10,7 @@ namespace WebScrapeConsoleTest
     {
         public int PostalId { get; set; }
 
-        public int PostalCode { get; set; }
+        public string PostalCode { get; set; }
 
         public string City { get; set; }
     }

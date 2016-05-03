@@ -34,7 +34,7 @@ namespace WebScrapeConsoleTest
 
         public string GetStringData(string regex, RegexOptions regexOpt)
         {
-            return webClientHandler.GetSiteContent(regex, regexOpt).First();
+            return webClientHandler.GetSiteContent(regex, regexOpt).FirstOrDefault();
         }
 
         public bool SetIndex(int index)
@@ -43,9 +43,10 @@ namespace WebScrapeConsoleTest
             return LoadWebClientHandler();
         }
 
-        public bool GetNextIndex(string str)
+        public bool GetNextIndex()
         {
             this.index++;
+            Console.WriteLine(index);
             return LoadWebClientHandler();
         }
 

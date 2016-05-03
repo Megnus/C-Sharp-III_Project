@@ -8,6 +8,8 @@ namespace WebScrapeConsoleTest
 {
     public class Person
     {
+        public int PersonId { get; set; }
+
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -16,7 +18,7 @@ namespace WebScrapeConsoleTest
 
         public string BirthDate { get; set; }
 
-        public string Link { get; set; }
+        //public string Link { get; set; }
 
         public Address Address { get; set; }
     }

@@ -39,11 +39,11 @@ namespace WebScrapeConsoleTest
         {
             //new WebClientHandler(79779);
             SiteInformationHandler<StaticMapData> siteInformationHandler =
-                new SiteInformationHandler<StaticMapData>("http://www.torget.se/personer/Stockholm/TA_{0}/");
+                new SiteInformationHandler<StaticMapData>("http://www.torget.se/personer/Stockholm/TA_{0}/", "staticMapData");
 
             siteInformationHandler.SetIndex(79779);
-
-            while (true)
+            int x = 0;
+            while (x++ < 1000)
             {
                 if (!siteInformationHandler.GetNextIndex())
                 {
@@ -113,21 +113,26 @@ namespace WebScrapeConsoleTest
                 }
             };
         }*/
+        public static int Converterta(string input)
+        {
+            int output = 0;
+            return int.TryParse(input, out output) ? output : 0;
+        }
     }
 
     public class StaticMapData
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Name { get; set; }
 
-        public double CoordY { get; set; }
+        public string CoordY { get; set; }
 
-        public double CoordX { get; set; }
+        public string CoordX { get; set; }
 
         public string Addr1 { get; set; }
 
-        public int PostalCode { get; set; }
+        public string PostalCode { get; set; }
 
         public string City { get; set; }
 
@@ -137,20 +142,32 @@ namespace WebScrapeConsoleTest
 
         public string Birthday { get; set; }
 
+        public static int Converterta(string input)
+        {
+            int output = 0;
+            return int.TryParse(input, out output) ? output : 0;
+        }
+
+        public static double Convertertd(string input)
+        {
+            double output = 0;
+            return double.TryParse(input, out output) ? output : 0;
+        }
+
         public Person GetPerson()
         {
             return new Person()
             {
-                Id = this.Id,
+                PersonId = Converterta(this.Id),
                 Name = this.Name,
                 Phone = this.Phone,
-                Link = this.Link,
+                //Link = this.Link,
                 BirthDate = this.Birthday,
                 Address = new Address()
                 {
                     Street = this.Addr1,
-                    XCoord = this.CoordX,
-                    YCoord = this.CoordY,
+                    XCoord = Convertertd(this.CoordX),
+                    YCoord = Convertertd(this.CoordY),
                     Postal = new Postal()
                     {
                         City = this.City,
