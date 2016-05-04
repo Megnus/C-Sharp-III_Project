@@ -37,6 +37,15 @@ namespace WebScrapeConsoleTest
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+           // WriteableBitmapDemo.doit();
+            Thread thread = new Thread(WriteableBitmapDemo.doit);
+            thread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
+            thread.Start();
+            thread.Join();
+
+
+            if (true) return;
+
             //new WebClientHandler(79779);
             SiteInformationHandler<StaticMapData> siteInformationHandler =
                 new SiteInformationHandler<StaticMapData>("http://www.torget.se/personer/Stockholm/TA_{0}/", "staticMapData");
