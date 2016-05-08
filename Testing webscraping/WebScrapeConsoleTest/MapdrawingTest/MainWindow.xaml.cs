@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MapdrawingTest
 {
@@ -22,45 +25,47 @@ namespace MapdrawingTest
     public partial class MainWindow : Window
     {
         //https://msdn.microsoft.com/en-us/library/system.windows.media.imaging.writeablebitmap(VS.85).aspx
-
+        MapRender maprender;
         public MainWindow()
         {
             InitializeComponent();
+            maprender = new MapRender(mapImage);
 
-            // Add a Line Element
-            //Line myLine = new Line();
-            //myLine.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
-            //myLine.X1 = 1;
-            //myLine.X2 = 50;
-            //myLine.Y1 = 1;
-            //myLine.Y2 = 250;
-            //myLine.HorizontalAlignment = HorizontalAlignment.Left;
-            //myLine.VerticalAlignment = VerticalAlignment.Center;
-            //myLine.StrokeThickness = 2;
-            //myGrid.Children.Add(myLine);
+            /* return;
+             // Add a Line Element
+             //Line myLine = new Line();
+             //myLine.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
+             //myLine.X1 = 1;
+             //myLine.X2 = 50;
+             //myLine.Y1 = 1;
+             //myLine.Y2 = 250;
+             //myLine.HorizontalAlignment = HorizontalAlignment.Left;
+             //myLine.VerticalAlignment = VerticalAlignment.Center;
+             //myLine.StrokeThickness = 2;
+             //myGrid.Children.Add(myLine);
 
-            // Define a StackPanel to host Controls
-            StackPanel myStackPanel = new StackPanel();
-            myStackPanel.Orientation = Orientation.Vertical;
-            myStackPanel.Height = 200;
-            myStackPanel.VerticalAlignment = VerticalAlignment.Top;
-            myStackPanel.HorizontalAlignment = HorizontalAlignment.Center;
+             // Define a StackPanel to host Controls
+             StackPanel myStackPanel = new StackPanel();
+             myStackPanel.Orientation = Orientation.Vertical;
+             myStackPanel.Height = 200;
+             myStackPanel.VerticalAlignment = VerticalAlignment.Top;
+             myStackPanel.HorizontalAlignment = HorizontalAlignment.Center;
 
-            // Add the Image to the parent StackPanel
-            myStackPanel.Children.Add(image);
+             // Add the Image to the parent StackPanel
+             myStackPanel.Children.Add(image);
 
-            // Add the StackPanel as the Content of the Parent Window Object
-            mainWindow.Content = myStackPanel;
-            mainWindow.Show();
+             // Add the StackPanel as the Content of the Parent Window Object
+             mainWindow.Content = myStackPanel;maprender.DrawLinex(100, 100);
+             mainWindow.Show();
 
-            // DispatcherTimer setup
-            // The DispatcherTimer will be used to update _random every
-            //    second with a new random set of colors.
-            DispatcherTimer dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.IsEnabled = true;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
-            dispatcherTimer.Start();
+             // DispatcherTimer setup
+             // The DispatcherTimer will be used to update _random every
+             //    second with a new random set of colors.
+             DispatcherTimer dispatcherTimer = new DispatcherTimer();
+             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+             dispatcherTimer.IsEnabled = true;
+             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+             dispatcherTimer.Start();*/
         }
 
         //  System.Windows.Threading.DispatcherTimer.Tick handler
@@ -96,5 +101,30 @@ namespace MapdrawingTest
         // Create a byte array for a the entire size of bitmap.
         private static int _arraySize = _stride * writeableBitmap.PixelHeight;
         private static byte[] _colorArray = new byte[_arraySize];
+
+        Random r = new Random();
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            //Task.Factory.StartNew
+                new Thread(() =>
+            {
+            for (int i = 0; i < 100000; i++)
+            {
+                double x = r.Next(11113056, 24150556) / 1000000.0;
+                double y = r.Next(55336944, 69060000) / 1000000.0;
+
+                this.Dispatcher.Invoke((Action)(() =>
+                {
+                    maprender.CalcCoord(x, y);
+                }));
+                Thread.Sleep(10);
+            }     
+        
+        
+            }).Start();
+            
+            //maprender.DrawLine(250, 250);
+        }
     }
 }
