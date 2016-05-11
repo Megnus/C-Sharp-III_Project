@@ -1,0 +1,93 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Diagnostics;
+using System.Collections.Concurrent;
+using System.Threading;
+
+namespace MapdrawingTest
+{
+    public class PopulationenRendering
+    {
+        WriteableBitmap writeableBitmap;
+        System.Windows.Controls.Image i;
+        private static double north = 69.06;
+        private static double south = 55.336944;
+        private static double east = 24.150556;
+        private static double west = 11.113056;
+        private ConcurrentQueue<System.Windows.Point> cq;
+        private bool enableRendering;
+
+        public void AddCoordinate(System.Windows.Point p)
+        {
+            cq.Enqueue(p);
+        }
+
+        public void StopRendering()
+        {
+            enableRendering = false;
+        }
+
+        public void StartRendering()
+        {
+            new Thread(() =>
+            {
+                Debug.WriteLine("Rendering started");
+                enableRendering = true;
+                System.Windows.Point p;
+                while (enableRendering)
+                {
+                    cq.TryDequeue(out p);
+                    Application.Current.Dispatcher.Invoke((Action)(() =>
+                    {
+                        CalcCoord(p.X, p.Y);
+                    }));
+                }
+            }).Start();
+            Debug.WriteLine("Rendering stoped");
+        }
+
+        public void CalcCoord(double x, double y)
+        {
+            int xx = (int) (x > east ? 300 : (x < west ? 0 : (x - west) * 300 / (east - west)));
+            int yy = (int) (y > north ? 0 : (y < south ? 600 : 703 - (y - south) * 703 / (north - south)));
+            Application.Current.Dispatcher.Invoke(() => SetPixel(xx, yy, writeableBitmap));
+        }
+
+        public PopulationenRendering(System.Windows.Controls.Image image)
+        {
+            i = image;
+            //BitmapImage bitmap = new BitmapImage(new Uri("C:\\Users\\Magnus\\Dropbox\\Kurser\\Programmering med C# III\\C-Sharp-III_Project\\Testing webscraping\\WebScrapeConsoleTest\\WebScrapeConsoleTest\\sweden-map.bmp", UriKind.Absolute));
+            BitmapImage bitmap = new BitmapImage(new Uri("C:\\Users\\msundstr\\Pictures\\sweden-map.bmp", UriKind.Absolute));
+            writeableBitmap = new WriteableBitmap(bitmap);
+            i.Source = writeableBitmap;
+            i.Stretch = Stretch.None;
+            i.HorizontalAlignment = HorizontalAlignment.Left;
+            i.VerticalAlignment = VerticalAlignment.Top;
+            cq = new ConcurrentQueue<System.Windows.Point>();
+        }
+
+        Action<int, int, WriteableBitmap> SetPixel = (x, y, wbm) =>
+        {
+            wbm.Lock();
+            var bmp = new System.Drawing.Bitmap(300, 704,
+                                     wbm.BackBufferStride,
+                                     System.Drawing.Imaging.PixelFormat.Format32bppPArgb,
+                                     wbm.BackBuffer);
+
+            bmp.SetPixel(x, y, System.Drawing.Color.Red);
+            bmp.Dispose();
+            //writeableBitmap.AddDirtyRect(new Int32Rect(0, 0, 300, 704));
+            wbm.AddDirtyRect(new Int32Rect(0, 0, 300, 680));
+            wbm.Unlock();
+        };
+    }
+}

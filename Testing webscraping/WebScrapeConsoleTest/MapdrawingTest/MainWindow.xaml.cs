@@ -14,7 +14,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MapdrawingTest
@@ -25,11 +24,12 @@ namespace MapdrawingTest
     public partial class MainWindow : Window
     {
         //https://msdn.microsoft.com/en-us/library/system.windows.media.imaging.writeablebitmap(VS.85).aspx
-        MapRender maprender;
+        PopulationenRendering populationenRendering;
+
         public MainWindow()
         {
             InitializeComponent();
-            maprender = new MapRender(mapImage);
+            populationenRendering = new PopulationenRendering(mapImage);
 
             /* return;
              // Add a Line Element
@@ -106,24 +106,29 @@ namespace MapdrawingTest
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            //Task.Factory.StartNew
-                new Thread(() =>
+            this.Dispatcher.Invoke((Action)(() =>
             {
+                populationenRendering.StartRendering();
+            }));
+
+            //Task.Factory.StartNew
+            new Thread(() =>
+        {
             for (int i = 0; i < 100000; i++)
             {
                 double x = r.Next(11113056, 24150556) / 1000000.0;
                 double y = r.Next(55336944, 69060000) / 1000000.0;
-
-                this.Dispatcher.Invoke((Action)(() =>
-                {
-                    maprender.CalcCoord(x, y);
-                }));
+                populationenRendering.AddCoordinate(new Point(x,y));
+                //this.Dispatcher.Invoke((Action)(() =>
+                //{
+                //    populationenRendering.CalcCoord(x, y);
+                //}));
                 Thread.Sleep(10);
-            }     
-        
-        
-            }).Start();
-            
+            }
+
+
+        }).Start();
+
             //maprender.DrawLine(250, 250);
         }
     }

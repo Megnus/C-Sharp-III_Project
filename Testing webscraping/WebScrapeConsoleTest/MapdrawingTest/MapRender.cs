@@ -60,7 +60,7 @@ namespace MapdrawingTest
             int column = (int)e.GetPosition(i).X;
             int row = (int)e.GetPosition(i).Y;
 
-            // Reserve the back buffer for updates.
+            // Reserve the back buffer for updates.f
             writeableBitmap.Lock();
 
             unsafe
