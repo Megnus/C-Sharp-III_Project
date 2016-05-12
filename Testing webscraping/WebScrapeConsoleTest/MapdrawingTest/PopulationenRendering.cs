@@ -25,6 +25,7 @@ namespace MapdrawingTest
         private static double west = 11.113056;
         private ConcurrentQueue<System.Windows.Point> cq;
         private bool enableRendering;
+        private Viewbox viewBox;
 
         public void AddCoordinate(System.Windows.Point p)
         {
@@ -43,13 +44,12 @@ namespace MapdrawingTest
                 Debug.WriteLine("Rendering started");
                 enableRendering = true;
                 System.Windows.Point p;
+                
                 while (enableRendering)
                 {
                     cq.TryDequeue(out p);
-                    Application.Current.Dispatcher.Invoke((Action)(() =>
-                    {
-                        CalcCoord(p.X, p.Y);
-                    }));
+                    CalcCoord(p.X, p.Y);
+                    Thread.Sleep(500);
                 }
             }).Start();
             Debug.WriteLine("Rendering stoped");
@@ -57,12 +57,12 @@ namespace MapdrawingTest
 
         public void CalcCoord(double x, double y)
         {
-            int xx = (int) (x > east ? 300 : (x < west ? 0 : (x - west) * 300 / (east - west)));
-            int yy = (int) (y > north ? 0 : (y < south ? 600 : 703 - (y - south) * 703 / (north - south)));
-            Application.Current.Dispatcher.Invoke(() => SetPixel(xx, yy, writeableBitmap));
+            int xx = (int)(x > east ? 300 : (x < west ? 0 : (x - west) * 300 / (east - west)));
+            int yy = (int)(y > north ? 0 : (y < south ? 600 : 703 - (y - south) * 703 / (north - south)));
+            Application.Current.Dispatcher.Invoke(() => SetPixel(xx, yy, writeableBitmap, viewBox));
         }
 
-        public PopulationenRendering(System.Windows.Controls.Image image)
+        public PopulationenRendering(System.Windows.Controls.Image image, Viewbox viewBox)
         {
             i = image;
             //BitmapImage bitmap = new BitmapImage(new Uri("C:\\Users\\Magnus\\Dropbox\\Kurser\\Programmering med C# III\\C-Sharp-III_Project\\Testing webscraping\\WebScrapeConsoleTest\\WebScrapeConsoleTest\\sweden-map.bmp", UriKind.Absolute));
@@ -73,9 +73,10 @@ namespace MapdrawingTest
             i.HorizontalAlignment = HorizontalAlignment.Left;
             i.VerticalAlignment = VerticalAlignment.Top;
             cq = new ConcurrentQueue<System.Windows.Point>();
+            this.viewBox = viewBox;
         }
 
-        Action<int, int, WriteableBitmap> SetPixel = (x, y, wbm) =>
+        Action<int, int, WriteableBitmap, Viewbox> SetPixel = (x, y, wbm, vb) =>
         {
             wbm.Lock();
             var bmp = new System.Drawing.Bitmap(300, 704,
@@ -88,6 +89,7 @@ namespace MapdrawingTest
             //writeableBitmap.AddDirtyRect(new Int32Rect(0, 0, 300, 704));
             wbm.AddDirtyRect(new Int32Rect(0, 0, 300, 680));
             wbm.Unlock();
+            vb.Margin = new Thickness(x - 5, y - 5, 291 - x + 5, 700 - y + 5);
         };
     }
 }

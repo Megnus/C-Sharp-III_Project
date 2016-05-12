@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace MapdrawingTest
 {
@@ -29,8 +30,9 @@ namespace MapdrawingTest
         public MainWindow()
         {
             InitializeComponent();
-            populationenRendering = new PopulationenRendering(mapImage);
-
+            populationenRendering = new PopulationenRendering(mapImage, vbab);
+            Debug.WriteLine((mainWindow.Width - vbab.Width));
+            Debug.WriteLine((mainWindow.Height - vbab.Height));
             /* return;
              // Add a Line Element
              //Line myLine = new Line();
@@ -106,28 +108,27 @@ namespace MapdrawingTest
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            this.Dispatcher.Invoke((Action)(() =>
-            {
-                populationenRendering.StartRendering();
-            }));
-
+            /* this.Dispatcher.Invoke((Action)(() =>
+             {
+                
+             }));*/
+            populationenRendering.StartRendering();
             //Task.Factory.StartNew
             new Thread(() =>
-        {
-            for (int i = 0; i < 100000; i++)
             {
-                double x = r.Next(11113056, 24150556) / 1000000.0;
-                double y = r.Next(55336944, 69060000) / 1000000.0;
-                populationenRendering.AddCoordinate(new Point(x,y));
-                //this.Dispatcher.Invoke((Action)(() =>
-                //{
-                //    populationenRendering.CalcCoord(x, y);
-                //}));
-                Thread.Sleep(10);
-            }
+                for (int i = 0; i < 100000; i++)
+                {
+                    double x = r.Next(11113056, 24150556) / 1000000.0;
+                    double y = r.Next(55336944, 69060000) / 1000000.0;
+                    populationenRendering.AddCoordinate(new Point(x, y));
+                    //this.Dispatcher.Invoke((Action)(() =>
+                    //{
+                    //vbab.Margin = new Thickness(x, y, 291 - x, 700 - y);
 
-
-        }).Start();
+                    //}));
+                    Thread.Sleep(100);
+                }
+            }).Start();
 
             //maprender.DrawLine(250, 250);
         }

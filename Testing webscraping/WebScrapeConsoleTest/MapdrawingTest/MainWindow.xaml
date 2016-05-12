@@ -5,11 +5,11 @@
     <Grid Name="myGrid">
 
         <Image x:Name="mapImage" HorizontalAlignment="Left" Height="704" VerticalAlignment="Top" Width="300" Margin="10,10,10,10" />
-        <Viewbox Margin="0,0,285,700" >
+        <Viewbox x:Name="vbab" Margin="0,0,291,700" Width="20" Height="20" >
             <Grid>
                 <Ellipse Height="100" Width="100" StrokeThickness="2" Stroke="Black"/>
                 <Line  X1="15" Y1="15" X2="85" Y2="85" Stroke="Black" StrokeThickness="1" />
-                <Line  X1="15" Y1="85" X2="85" Y2="15" Stroke="Black" StrokeThickness="1" />
+                <Line  X1="15" Y1="85" X2="85" Y2="15" Stroke="Black" StrokeThickness="1" Panel.ZIndex="100" />
             </Grid>
         </Viewbox>
         <Button Content="Button" HorizontalAlignment="Left" Margin="243,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
