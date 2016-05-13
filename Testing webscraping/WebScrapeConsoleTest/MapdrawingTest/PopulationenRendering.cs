@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Threading;
+using System.Windows.Shapes;
 
 namespace MapdrawingTest
 {
@@ -62,7 +63,7 @@ namespace MapdrawingTest
             Application.Current.Dispatcher.Invoke(() => SetPixel(xx, yy, writeableBitmap, viewBox));
         }
 
-        public PopulationenRendering(System.Windows.Controls.Image image, Viewbox viewBox)
+        public PopulationenRendering(System.Windows.Controls.Image image, Viewbox viewBox, Canvas canvas)
         {
             i = image;
             //BitmapImage bitmap = new BitmapImage(new Uri("C:\\Users\\Magnus\\Dropbox\\Kurser\\Programmering med C# III\\C-Sharp-III_Project\\Testing webscraping\\WebScrapeConsoleTest\\WebScrapeConsoleTest\\sweden-map.bmp", UriKind.Absolute));
@@ -74,6 +75,20 @@ namespace MapdrawingTest
             i.VerticalAlignment = VerticalAlignment.Top;
             cq = new ConcurrentQueue<System.Windows.Point>();
             this.viewBox = viewBox;
+
+            Application.Current.Dispatcher.Invoke(() => {}
+            // Add a Line Element
+            Line firstLine = new Line();
+            firstLine.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
+            firstLine.X1 = 1;
+            firstLine.X2 = 50;
+            firstLine.Y1 = 1;
+            firstLine.Y2 = 50;
+            firstLine.HorizontalAlignment = HorizontalAlignment.Left;
+            firstLine.VerticalAlignment = VerticalAlignment.Center;
+            firstLine.StrokeThickness = 1;
+
+            canvas.Children.Add(firstLine); });
         }
 
         Action<int, int, WriteableBitmap, Viewbox> SetPixel = (x, y, wbm, vb) =>
@@ -90,6 +105,7 @@ namespace MapdrawingTest
             wbm.AddDirtyRect(new Int32Rect(0, 0, 300, 680));
             wbm.Unlock();
             vb.Margin = new Thickness(x - 5, y - 5, 291 - x + 5, 700 - y + 5);
+
         };
     }
 }

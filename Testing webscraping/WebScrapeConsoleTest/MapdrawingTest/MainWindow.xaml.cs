@@ -30,7 +30,7 @@ namespace MapdrawingTest
         public MainWindow()
         {
             InitializeComponent();
-            populationenRendering = new PopulationenRendering(mapImage, vbab);
+            populationenRendering = new PopulationenRendering(mapImage, vbab, canvas);
             Debug.WriteLine((mainWindow.Width - vbab.Width));
             Debug.WriteLine((mainWindow.Height - vbab.Height));
             /* return;
