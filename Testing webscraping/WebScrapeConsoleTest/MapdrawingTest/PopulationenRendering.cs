@@ -28,6 +28,8 @@ namespace MapdrawingTest
         private bool enableRendering;
         private Viewbox viewBox;
 
+        private CrossHair crossHair;
+
         public void AddCoordinate(System.Windows.Point p)
         {
             cq.Enqueue(p);
@@ -45,29 +47,36 @@ namespace MapdrawingTest
                 Debug.WriteLine("Rendering started");
                 enableRendering = true;
                 System.Windows.Point p;
-                
+
                 while (enableRendering)
                 {
                     cq.TryDequeue(out p);
-                    CalcCoord(p.X, p.Y);
+                    Render(p.X, p.Y);
                     Thread.Sleep(500);
                 }
             }).Start();
             Debug.WriteLine("Rendering stoped");
         }
 
-        public void CalcCoord(double x, double y)
+        private System.Drawing.Point TransForm(System.Windows.Point point)
         {
-            int xx = (int)(x > east ? 300 : (x < west ? 0 : (x - west) * 300 / (east - west)));
-            int yy = (int)(y > north ? 0 : (y < south ? 600 : 703 - (y - south) * 703 / (north - south)));
-            Application.Current.Dispatcher.Invoke(() => SetPixel(xx, yy, writeableBitmap, viewBox));
+            return new System.Drawing.Point(
+                    (int)(point.X > east ? 300 : (point.X < west ? 0 : (point.X - west) * 300 / (east - west))),
+                    (int)(point.Y > north ? 0 : (point.Y < south ? 600 : 703 - (point.Y - south) * 703 / (north - south)))
+                );
+        }
+
+        public void Render(double x, double y)
+        {
+            System.Drawing.Point point = TransForm(new System.Windows.Point(x, y));
+            Application.Current.Dispatcher.Invoke(() => SetPixel(point.X, point.Y, writeableBitmap, crossHair));
         }
 
         public PopulationenRendering(System.Windows.Controls.Image image, Viewbox viewBox, Canvas canvas)
         {
             i = image;
-            //BitmapImage bitmap = new BitmapImage(new Uri("C:\\Users\\Magnus\\Dropbox\\Kurser\\Programmering med C# III\\C-Sharp-III_Project\\Testing webscraping\\WebScrapeConsoleTest\\WebScrapeConsoleTest\\sweden-map.bmp", UriKind.Absolute));
-            BitmapImage bitmap = new BitmapImage(new Uri("C:\\Users\\msundstr\\Pictures\\sweden-map.bmp", UriKind.Absolute));
+            BitmapImage bitmap = new BitmapImage(new Uri("C:\\Users\\Magnus\\Dropbox\\Kurser\\Programmering med C# III\\C-Sharp-III_Project\\Testing webscraping\\WebScrapeConsoleTest\\WebScrapeConsoleTest\\sweden-map.bmp", UriKind.Absolute));
+            //BitmapImage bitmap = new BitmapImage(new Uri("C:\\Users\\msundstr\\Pictures\\sweden-map.bmp", UriKind.Absolute));
             writeableBitmap = new WriteableBitmap(bitmap);
             i.Source = writeableBitmap;
             i.Stretch = Stretch.None;
@@ -75,23 +84,10 @@ namespace MapdrawingTest
             i.VerticalAlignment = VerticalAlignment.Top;
             cq = new ConcurrentQueue<System.Windows.Point>();
             this.viewBox = viewBox;
-
-            Application.Current.Dispatcher.Invoke(() => {}
-            // Add a Line Element
-            Line firstLine = new Line();
-            firstLine.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
-            firstLine.X1 = 1;
-            firstLine.X2 = 50;
-            firstLine.Y1 = 1;
-            firstLine.Y2 = 50;
-            firstLine.HorizontalAlignment = HorizontalAlignment.Left;
-            firstLine.VerticalAlignment = VerticalAlignment.Center;
-            firstLine.StrokeThickness = 1;
-
-            canvas.Children.Add(firstLine); });
+            this.crossHair = new CrossHair(canvas); ;
         }
 
-        Action<int, int, WriteableBitmap, Viewbox> SetPixel = (x, y, wbm, vb) =>
+        Action<int, int, WriteableBitmap, CrossHair> SetPixel = (x, y, wbm, ch) =>
         {
             wbm.Lock();
             var bmp = new System.Drawing.Bitmap(300, 704,
@@ -101,11 +97,79 @@ namespace MapdrawingTest
 
             bmp.SetPixel(x, y, System.Drawing.Color.Red);
             bmp.Dispose();
-            //writeableBitmap.AddDirtyRect(new Int32Rect(0, 0, 300, 704));
             wbm.AddDirtyRect(new Int32Rect(0, 0, 300, 680));
             wbm.Unlock();
-            vb.Margin = new Thickness(x - 5, y - 5, 291 - x + 5, 700 - y + 5);
+            ch.SetPosition(new System.Windows.Point(x, y));
 
         };
+    }
+
+    public class CrossHair
+    {
+        private Line firstLine;
+        private Line secondLine;
+        private Ellipse ellipse;
+        private Canvas canvas;
+
+        public CrossHair(Canvas canvas)
+        {
+            this.canvas = canvas;
+
+            firstLine = new Line();
+            secondLine = new Line();
+            firstLine.Stroke = System.Windows.Media.Brushes.Black;
+            secondLine.Stroke = System.Windows.Media.Brushes.Black;
+
+            firstLine.X1 = -5 + 200;
+            firstLine.X2 = 5 + 200;
+            firstLine.Y1 = -5 + 200;
+            firstLine.Y2 = 5 + 200;
+
+            secondLine.X1 = 5 + 200;
+            secondLine.X2 = -5 + 200;
+            secondLine.Y1 = -5 + 200;
+            secondLine.Y2 = 5 + 200;
+
+            firstLine.HorizontalAlignment = HorizontalAlignment.Left;
+            firstLine.VerticalAlignment = VerticalAlignment.Center;
+            firstLine.StrokeThickness = 1;
+            firstLine.SnapsToDevicePixels = true;
+
+            secondLine.HorizontalAlignment = HorizontalAlignment.Left;
+            secondLine.VerticalAlignment = VerticalAlignment.Center;
+            secondLine.StrokeThickness = 1;
+            secondLine.SnapsToDevicePixels = true;
+
+            secondLine.VerticalAlignment = VerticalAlignment.Center;
+            secondLine.StrokeThickness = 1;
+
+            ellipse = new Ellipse { Width = 16, Height = 16 };
+            double left = 200 - (16 / 2);
+            double top = 200 - (16 / 2);
+            ellipse.Margin = new Thickness(left, top, 0, 0);
+            ellipse.Stroke = System.Windows.Media.Brushes.Black;
+            ellipse.SnapsToDevicePixels = true;
+
+            canvas.Children.Add(firstLine);
+            canvas.Children.Add(secondLine);
+            canvas.Children.Add(ellipse);
+        }
+
+        public void SetPosition(System.Windows.Point point)
+        {
+            firstLine.X1 = -5 + point.X;
+            firstLine.X2 = 5 + point.X;
+            firstLine.Y1 = -5 + point.Y;
+            firstLine.Y2 = 5 + point.Y;
+
+            secondLine.X1 = 5 + point.X;
+            secondLine.X2 = -5 + point.X;
+            secondLine.Y1 = -5 + point.Y;
+            secondLine.Y2 = 5 + point.Y;
+
+            double left = point.X - (16 / 2);
+            double top = point.Y - (16 / 2);
+            ellipse.Margin = new Thickness(left, top, 0, 0);
+        }
     }
 }

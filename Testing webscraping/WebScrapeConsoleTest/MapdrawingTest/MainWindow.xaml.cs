@@ -19,6 +19,7 @@ using System.Diagnostics;
 
 namespace MapdrawingTest
 {
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -26,6 +27,7 @@ namespace MapdrawingTest
     {
         //https://msdn.microsoft.com/en-us/library/system.windows.media.imaging.writeablebitmap(VS.85).aspx
         PopulationenRendering populationenRendering;
+        private ViewModel view;
 
         public MainWindow()
         {
@@ -33,6 +35,8 @@ namespace MapdrawingTest
             populationenRendering = new PopulationenRendering(mapImage, vbab, canvas);
             Debug.WriteLine((mainWindow.Width - vbab.Width));
             Debug.WriteLine((mainWindow.Height - vbab.Height));
+            view = new ViewModel();
+            mylist.ItemsSource = view.Items;
             /* return;
              // Add a Line Element
              //Line myLine = new Line();
@@ -68,6 +72,14 @@ namespace MapdrawingTest
              dispatcherTimer.IsEnabled = true;
              dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
              dispatcherTimer.Start();*/
+
+            List<TodoItem> items = new List<TodoItem>();
+            items.Add(new TodoItem() { Title = "Complete this WPF tutorial", Title2 = "tetstststst", Completion = 45 });
+            items.Add(new TodoItem() { Title = "Learn C#", Completion = 80 });
+            items.Add(new TodoItem() { Title = "Wash the car", Completion = 0 });
+
+            lbTodoList.ItemsSource = items;
+            PersonsList.ItemsSource = items;
         }
 
         //  System.Windows.Threading.DispatcherTimer.Tick handler
@@ -108,6 +120,8 @@ namespace MapdrawingTest
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+
+
             /* this.Dispatcher.Invoke((Action)(() =>
              {
                 
@@ -121,16 +135,38 @@ namespace MapdrawingTest
                     double x = r.Next(11113056, 24150556) / 1000000.0;
                     double y = r.Next(55336944, 69060000) / 1000000.0;
                     populationenRendering.AddCoordinate(new Point(x, y));
-                    //this.Dispatcher.Invoke((Action)(() =>
-                    //{
-                    //vbab.Margin = new Thickness(x, y, 291 - x, 700 - y);
-
-                    //}));
                     Thread.Sleep(100);
                 }
             }).Start();
-
-            //maprender.DrawLine(250, 250);
         }
     }
+
+    public class TodoItem
+    {
+        public string Title { get; set; }
+        public string Title2 { get; set; }
+        public int Completion { get; set; }
+    }
+
+    public class ViewModel
+    {
+        public List<Person> Items
+        {
+            get
+            {
+                return new List<Person>
+            {
+                new Person { Name = "P1", Age = 1 },
+                new Person { Name = "P2", Age = 2 }
+            };
+            }
+        }
+    }
+
+    public class Person
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+    }
+
 }
