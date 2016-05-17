@@ -6,16 +6,18 @@ using System.Threading.Tasks;
 
 namespace WebScrapeConsoleTest
 {
-    public class Address
+    public class Addressx
     {
         public int AddressId { get; set; }
 
         public string Street { get; set; }
 
-        public Postal Postal { get; set; }
+        public Postalx sPostal { get; set; }
 
         public double XCoord { get; set; }
 
         public double YCoord { get; set; }
     }
+
+
 }

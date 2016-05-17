@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace WebScrapeConsoleTest
 {
-    public class PersonContext : DbContext
+    public class PersonContextx : DbContext
     {
         public DbSet<Person> Persons { get; set; }
 
-        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Addressx> Addresses { get; set; }
 
-        public DbSet<Postal> Postals { get; set; }
+        public DbSet<Postalx> Postals { get; set; }
     }
 }

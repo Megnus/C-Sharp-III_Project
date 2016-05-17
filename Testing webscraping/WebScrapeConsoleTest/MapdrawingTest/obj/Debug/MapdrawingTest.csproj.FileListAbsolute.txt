@@ -24,3 +24,7 @@ C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Test
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\MapdrawingTest\obj\Debug\MapdrawingTest.csproj.GenerateResource.Cache
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\MapdrawingTest\obj\Debug\MapdrawingTest.exe
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\MapdrawingTest\obj\Debug\MapdrawingTest.pdb
+C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\MapdrawingTest\bin\Debug\EntityFramework.dll
+C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\MapdrawingTest\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\MapdrawingTest\bin\Debug\EntityFramework.xml
+C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\MapdrawingTest\bin\Debug\EntityFramework.SqlServer.xml

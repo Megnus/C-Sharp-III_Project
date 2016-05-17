@@ -10,7 +10,7 @@ namespace WebScrapeConsoleTest
     {
         public DatabaseHandler()
         {
-            using (var db = new PersonContext())
+            using (var db = new PersonContextx())
             {
                 db.Persons.Where(x => x.Id > 99500).ToList().ForEach(x => Console.WriteLine(x.Name));
             }
@@ -19,7 +19,7 @@ namespace WebScrapeConsoleTest
 
             for (int i = 0; i < 100000; i++)
             {
-                using (var db = new PersonContext())
+                using (var db = new PersonContextx())
                 {
                     var persons = new Person()
                     {
@@ -27,12 +27,12 @@ namespace WebScrapeConsoleTest
                         BirthDate = (DateTime.Today).ToString(),
                         Phone = "070-3945876",
                         //Link = "/bla/bla/..",
-                        Address = new Address()
+                        Address = new Addressx()
                         {
                             Street = "Metargatan",
                             XCoord = 1.001,
                             YCoord = 1.002,
-                            Postal = new Postal()
+                            sPostal = new Postalx()
                             {
                                 City = "Stockholm",
                                 PostalCode = "10405"

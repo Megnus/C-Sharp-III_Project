@@ -36,19 +36,7 @@ namespace MapdrawingTest
             Debug.WriteLine((mainWindow.Width - vbab.Width));
             Debug.WriteLine((mainWindow.Height - vbab.Height));
             view = new ViewModel();
-            mylist.ItemsSource = view.Items;
             /* return;
-             // Add a Line Element
-             //Line myLine = new Line();
-             //myLine.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
-             //myLine.X1 = 1;
-             //myLine.X2 = 50;
-             //myLine.Y1 = 1;
-             //myLine.Y2 = 250;
-             //myLine.HorizontalAlignment = HorizontalAlignment.Left;
-             //myLine.VerticalAlignment = VerticalAlignment.Center;
-             //myLine.StrokeThickness = 2;
-             //myGrid.Children.Add(myLine);
 
              // Define a StackPanel to host Controls
              StackPanel myStackPanel = new StackPanel();
@@ -72,14 +60,23 @@ namespace MapdrawingTest
              dispatcherTimer.IsEnabled = true;
              dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
              dispatcherTimer.Start();*/
+            List<Data.Person> persons = new List<Data.Person>();
+            persons.Add(new Data.Person() { PersonId = 1, Id = 2, Name = "Magnus", Phone = "070-3945876", BirthDate = "18 maj", Address = new Data.Address() { Street = "FUCK", XCoord = 66.234, Postal = new Data.Postal { City = "York", PostalCode = "123456"} } });
+            persons.Add(persons.First());
+            persons.Add(persons.First());
+            persons.Add(persons.First());
+            persons.Add(persons.First());
+            persons.Add(persons.First());
+            persons.Add(persons.First());
+            
+            PersonsList.ItemsSource = persons;
+
 
             List<TodoItem> items = new List<TodoItem>();
             items.Add(new TodoItem() { Title = "Complete this WPF tutorial", Title2 = "tetstststst", Completion = 45 });
             items.Add(new TodoItem() { Title = "Learn C#", Completion = 80 });
             items.Add(new TodoItem() { Title = "Wash the car", Completion = 0 });
 
-            lbTodoList.ItemsSource = items;
-            PersonsList.ItemsSource = items;
         }
 
         //  System.Windows.Threading.DispatcherTimer.Tick handler
@@ -150,20 +147,20 @@ namespace MapdrawingTest
 
     public class ViewModel
     {
-        public List<Person> Items
+        public List<Personal> Items
         {
             get
             {
-                return new List<Person>
+                return new List<Personal>
             {
-                new Person { Name = "P1", Age = 1 },
-                new Person { Name = "P2", Age = 2 }
+                new Personal { Name = "P1", Age = 1 },
+                new Personal { Name = "P2", Age = 2 }
             };
             }
         }
     }
 
-    public class Person
+    public class Personal
     {
         public string Name { get; set; }
         public int Age { get; set; }

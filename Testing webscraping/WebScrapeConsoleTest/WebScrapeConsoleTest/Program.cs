@@ -156,7 +156,7 @@ namespace WebScrapeConsoleTest
 
                 Person person = staticMapData.GetPerson();
 
-                using (var db = new PersonContext())
+                using (var db = new PersonContextx())
                 {
                     db.Persons.Add(person);
                     db.SaveChanges();
@@ -218,7 +218,7 @@ namespace WebScrapeConsoleTest
         }
     }
 
-    public class StaticMapData
+    public class StaticMapDataX
     {
         public string Id { get; set; }
 
@@ -261,12 +261,12 @@ namespace WebScrapeConsoleTest
                 Phone = this.Phone,
                 //Link = this.Link,
                 BirthDate = this.Birthday,
-                Address = new Address()
+                Address = new Addressx()
                 {
                     Street = this.Addr1,
                     XCoord = Convertertd(this.CoordX),
                     YCoord = Convertertd(this.CoordY),
-                    Postal = new Postal()
+                    sPostal = new Postalx()
                     {
                         City = this.City,
                         PostalCode = this.PostalCode

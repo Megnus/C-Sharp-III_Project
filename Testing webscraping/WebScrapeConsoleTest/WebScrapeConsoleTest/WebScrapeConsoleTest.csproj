@@ -70,6 +70,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SiteInformationHandler.cs" />
+    <Compile Include="StaticMapData.cs" />
     <Compile Include="WebClientHandler.cs" />
     <Compile Include="WriteableBitmapDemo.cs" />
   </ItemGroup>

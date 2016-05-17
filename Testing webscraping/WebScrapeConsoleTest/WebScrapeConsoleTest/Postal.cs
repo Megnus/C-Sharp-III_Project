@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebScrapeConsoleTest
 {
-    public class Postal
+    public class Postalx
     {
         public int PostalId { get; set; }
 

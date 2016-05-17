@@ -20,6 +20,6 @@ namespace WebScrapeConsoleTest
 
         //public string Link { get; set; }
 
-        public Address Address { get; set; }
+        public Addressx Address { get; set; }
     }
 }
