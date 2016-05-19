@@ -16,6 +16,9 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
+using MapdrawingTest.Web;
+using MapdrawingTest.Data;
+using System.Text.RegularExpressions;
 
 namespace MapdrawingTest
 {
@@ -28,13 +31,20 @@ namespace MapdrawingTest
         //https://msdn.microsoft.com/en-us/library/system.windows.media.imaging.writeablebitmap(VS.85).aspx
         PopulationenRendering populationenRendering;
         private ViewModel view;
+        private List<Data.Person> persons;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            Debug.WriteLine(StaticMapData.ConvertToDouble("12.9991601155327").ToString());
+            //12.9991601155327  
+            //57.7310176461699
+
+
             populationenRendering = new PopulationenRendering(mapImage, vbab, canvas);
-            Debug.WriteLine((mainWindow.Width - vbab.Width));
-            Debug.WriteLine((mainWindow.Height - vbab.Height));
+            //Debug.WriteLine((mainWindow.Width - vbab.Width));
+            //Debug.WriteLine((mainWindow.Height - vbab.Height));
             view = new ViewModel();
             /* return;
 
@@ -60,24 +70,70 @@ namespace MapdrawingTest
              dispatcherTimer.IsEnabled = true;
              dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
              dispatcherTimer.Start();*/
-            List<Data.Person> persons = new List<Data.Person>();
-            persons.Add(new Data.Person() { PersonId = 1, Id = 2, Name = "Magnus", Phone = "070-3945876", BirthDate = "18 maj", Address = new Data.Address() { Street = "FUCK", XCoord = 66.234, Postal = new Data.Postal { City = "York", PostalCode = "123456"} } });
-            persons.Add(persons.First());
-            persons.Add(persons.First());
-            persons.Add(persons.First());
-            persons.Add(persons.First());
-            persons.Add(persons.First());
-            persons.Add(persons.First());
-            
-            PersonsList.ItemsSource = persons;
+            persons = new List<Data.Person>();
+            //persons.Add(new Data.Person() { PersonId = 1, Id = 2, Name = "Magnus", Phone = "070-3945876", BirthDate = "18 maj", Address = new Data.Address() { Street = "FUCK", XCoord = 66.234, Postal = new Data.Postal { City = "York", PostalCode = "123456" } } });
+            //persons.Add(persons.First());
+            //persons.Add(persons.First());
+            //persons.Add(persons.First());
+            //persons.Add(persons.First());
+            //persons.Add(persons.First());
+            //persons.Add(persons.First());
 
+            PersonsList.ItemsSource = persons;
 
             List<TodoItem> items = new List<TodoItem>();
             items.Add(new TodoItem() { Title = "Complete this WPF tutorial", Title2 = "tetstststst", Completion = 45 });
             items.Add(new TodoItem() { Title = "Learn C#", Completion = 80 });
             items.Add(new TodoItem() { Title = "Wash the car", Completion = 0 });
 
+            //Task.Factory.StartNew(() => WebScraping());
+            //Task.Run(() => WebScraping());
+            
         }
+
+        private void WebScraping()
+        {
+            SiteInformationHandler<StaticMapData> siteInformationHandler =
+                new SiteInformationHandler<StaticMapData>("http://www.torget.se/personer/Stockholm/TA_{0}/", "staticMapData");
+
+            siteInformationHandler.SetIndex(79779);
+            int x = 0;
+            while (x++ < 1000)
+            {
+                if (!siteInformationHandler.GetNextIndex())
+                {
+                    continue;
+                }
+
+                StaticMapData staticMapData =
+                    siteInformationHandler.GetSerializedData("(?<=var\\sstaticMapData\\s=\\s\\[).+?(?=\\];)", RegexOptions.Singleline);
+
+                staticMapData.Birthday =
+                    siteInformationHandler.GetStringData("(?<=födelsedag\\n<\\/h2>\n<p>\n).+?(?=<br\\/>)", RegexOptions.Singleline);
+
+                Person person = staticMapData.GetPerson();
+                Debug.WriteLine(person.Name);
+                using (var db = new PersonContext())
+                {
+                    db.Persons.Add(person);
+                    db.SaveChanges();
+                }
+             //   this.Dispatcher.Invoke((Action)(() =>
+             //{
+                
+             //}));
+                Dispatcher.Invoke(() => 
+                    {
+                        persons.Add(person);
+                        PersonsList.InvalidateArrange();
+                        PersonsList.UpdateLayout();
+                        PersonsList.Items.Refresh();
+                    });
+                //PersonsList.UpdateLayout()
+                //persons.Add(person);
+            }
+        }
+
 
         //  System.Windows.Threading.DispatcherTimer.Tick handler
         //
@@ -117,24 +173,24 @@ namespace MapdrawingTest
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-
+            new Thread(() => WebScraping()).Start();
 
             /* this.Dispatcher.Invoke((Action)(() =>
              {
                 
              }));*/
-            populationenRendering.StartRendering();
-            //Task.Factory.StartNew
-            new Thread(() =>
-            {
-                for (int i = 0; i < 100000; i++)
-                {
-                    double x = r.Next(11113056, 24150556) / 1000000.0;
-                    double y = r.Next(55336944, 69060000) / 1000000.0;
-                    populationenRendering.AddCoordinate(new Point(x, y));
-                    Thread.Sleep(100);
-                }
-            }).Start();
+        //    populationenRendering.StartRendering();
+        //    //Task.Factory.StartNew
+        //    new Thread(() =>
+        //    {
+        //        for (int i = 0; i < 100000; i++)
+        //        {
+        //            double x = r.Next(11113056, 24150556) / 1000000.0;
+        //            double y = r.Next(55336944, 69060000) / 1000000.0;
+        //            populationenRendering.AddCoordinate(new Point(x, y));
+        //            Thread.Sleep(100);
+        //        }
+        //    }).Start();
         }
     }
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 
 namespace WebScrapeConsoleTest
 {
@@ -27,10 +27,10 @@ namespace WebScrapeConsoleTest
             LoadWebClientHandler();
         }
 
-        public T GetSerializedData(string regex, RegexOptions regexOpt)
-        {
-            return JsonConvert.DeserializeObject<T>(GetStringData(regex, regexOpt));
-        }
+        //public T GetSerializedData(string regex, RegexOptions regexOpt)
+        //{
+        //    return JsonConvert.DeserializeObject<T>(GetStringData(regex, regexOpt));
+        //}
 
         public string GetStringData(string regex, RegexOptions regexOpt)
         {

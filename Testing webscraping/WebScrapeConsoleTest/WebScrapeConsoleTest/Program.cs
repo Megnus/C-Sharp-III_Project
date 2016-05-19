@@ -6,7 +6,7 @@ using System.Net;
 using System.Diagnostics;
 using System.Threading;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 
@@ -136,8 +136,8 @@ namespace WebScrapeConsoleTest
             if (true) return;
 
             //new WebClientHandler(79779);
-            SiteInformationHandler<StaticMapData> siteInformationHandler =
-                new SiteInformationHandler<StaticMapData>("http://www.torget.se/personer/Stockholm/TA_{0}/", "staticMapData");
+            SiteInformationHandler<StaticMapDatax> siteInformationHandler =
+                new SiteInformationHandler<StaticMapDatax>("http://www.torget.se/personer/Stockholm/TA_{0}/", "staticMapData");
 
             siteInformationHandler.SetIndex(79779);
             int x = 0;
@@ -148,19 +148,19 @@ namespace WebScrapeConsoleTest
                     continue;
                 }
 
-                StaticMapData staticMapData =
-                    siteInformationHandler.GetSerializedData("(?<=var\\sstaticMapData\\s=\\s\\[).+?(?=\\];)", RegexOptions.Singleline);
+                //StaticMapDatax staticMapData =
+                //    siteInformationHandler.GetSerializedData("(?<=var\\sstaticMapData\\s=\\s\\[).+?(?=\\];)", RegexOptions.Singleline);
 
-                staticMapData.Birthday =
-                    siteInformationHandler.GetStringData("(?<=födelsedag\\n<\\/h2>\n<p>).+?(?=<br\\/>)", RegexOptions.Singleline);
+                //staticMapData.Birthday =
+                //    siteInformationHandler.GetStringData("(?<=födelsedag\\n<\\/h2>\n<p>).+?(?=<br\\/>)", RegexOptions.Singleline);
 
-                Person person = staticMapData.GetPerson();
+                //Personx person = staticMapData.GetPerson();
 
-                using (var db = new PersonContextx())
-                {
-                    db.Persons.Add(person);
-                    db.SaveChanges();
-                }
+                //using (var db = new PersonContextx())
+                //{
+                //    db.Persons.Add(person);
+                //    db.SaveChanges();
+                //}
 
             }
 
@@ -252,9 +252,9 @@ namespace WebScrapeConsoleTest
             return double.TryParse(input, out output) ? output : 0;
         }
 
-        public Person GetPerson()
+        public Personx GetPerson()
         {
-            return new Person()
+            return new Personx()
             {
                 PersonId = Converterta(this.Id),
                 Name = this.Name,

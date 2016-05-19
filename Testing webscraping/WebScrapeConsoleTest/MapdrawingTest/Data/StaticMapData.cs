@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,16 +30,16 @@ namespace MapdrawingTest.Data
 
         public string Birthday { get; set; }
 
-        private int ConvertToInt(string input)
+        public static int ConvertToInt(string input)
         {
             int output = 0;
             return int.TryParse(input, out output) ? output : 0;
         }
 
-        private double ConvertToDouble(string input)
+        public static double ConvertToDouble(string input)
         {
             double output = 0;
-            return double.TryParse(input, out output) ? output : 0;
+            return double.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out output) ? output : 0;
         }
 
         public Postal GetPostal()
@@ -51,11 +53,14 @@ namespace MapdrawingTest.Data
 
         public Address GetAddress()
         {
+            Debug.WriteLine(this.CoordX + "  " + this.CoordY);
             return new Address()
             {
                 Street = this.Addr1,
-                XCoord = this.ConvertToDouble(this.CoordX),
-                YCoord = this.ConvertToDouble(this.CoordY),
+                //XCoord = this.ConvertToDouble(this.CoordX),
+                //YCoord = this.ConvertToDouble(this.CoordY),
+                XCoord = ConvertToDouble(this.CoordX),
+                YCoord = ConvertToDouble(this.CoordY),
                 Postal = GetPostal()
             };
         }

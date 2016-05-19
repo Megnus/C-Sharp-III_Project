@@ -10,18 +10,18 @@ namespace WebScrapeConsoleTest
     {
         public DatabaseHandler()
         {
-            using (var db = new PersonContextx())
+            //using (var db = new PersonContextx())
             {
-                db.Persons.Where(x => x.Id > 99500).ToList().ForEach(x => Console.WriteLine(x.Name));
+                //db.Persons.Where(x => x.Id > 99500).ToList().ForEach(x => Console.WriteLine(x.Name));
             }
 
             if (true) return;
 
             for (int i = 0; i < 100000; i++)
             {
-                using (var db = new PersonContextx())
+                //using (var db = new PersonContextx())
                 {
-                    var persons = new Person()
+                    var persons = new Personx()
                     {
                         Name = i + ": Magnus Sundström",
                         BirthDate = (DateTime.Today).ToString(),
@@ -39,9 +39,9 @@ namespace WebScrapeConsoleTest
                             }
                         }
                     };
-                    db.Persons.Add(persons);
-                    Console.WriteLine(persons.Name);
-                    db.SaveChanges();
+                    //db.Persons.Add(persons);
+                    //Console.WriteLine(persons.Name);
+                    //db.SaveChanges();
                 }
             }
 

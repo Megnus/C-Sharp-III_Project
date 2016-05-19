@@ -17,7 +17,7 @@
 
         <TabControl Margin="385,8,10,22">
             <TabItem Header="Webscaping progress" >
-                <ListBox Name="PersonsList" HorizontalContentAlignment="Stretch" Margin="16,415,11,12" RenderTransformOrigin="0.5,0.5">
+                <ListBox Name="PersonsList" HorizontalContentAlignment="Stretch" Margin="16,415,11,12" RenderTransformOrigin="0.5,0.5" FontSize="9">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="0,2">
@@ -26,12 +26,12 @@
                                     <ColumnDefinition Width="70" />
                                     <ColumnDefinition Width="120" />
                                     <ColumnDefinition Width="100" />
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="100" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="{Binding PersonId}" />
                                 <TextBlock Grid.Column="1" Text="{Binding Id}" />
