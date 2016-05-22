@@ -10,7 +10,7 @@ namespace MapdrawingTest.Data
     {
         public int PersonId { get; set; }
 
-        public int Id { get; set; }
+        public int Ixd { get; set; }
 
         public string Name { get; set; }
 
@@ -20,6 +20,8 @@ namespace MapdrawingTest.Data
 
         //public string Link { get; set; }
 
-        public Address Address { get; set; }
+      //  public string PostalCode { get; set; }
+
+        //public Address Address { get; set; }
     }
 }

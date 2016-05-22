@@ -69,6 +69,7 @@
     </ApplicationDefinition>
     <Compile Include="Data\StaticMapData.cs" />
     <Compile Include="Obosolete\WriteableBitmapDemo.cs" />
+    <Compile Include="SchoolEntityFramework.cs" />
     <Compile Include="Web\SiteInformationHandler.cs" />
     <Compile Include="Web\WebClientHandler.cs" />
     <Page Include="MainWindow.xaml">

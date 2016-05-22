@@ -15,10 +15,4 @@ C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Test
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\obj\Debug\WebScrapeConsoleTest.pdb
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\bin\Debug\WebScrapeConsoleTest.exe
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\bin\Debug\WebScrapeConsoleTest.pdb
-C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\bin\Debug\EntityFramework.dll
-C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\bin\Debug\EntityFramework.SqlServer.dll
-C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\bin\Debug\EntityFramework.xml
-C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\bin\Debug\EntityFramework.SqlServer.xml
-C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\WebScrapeConsoleTest\obj\Debug\WebScrapeConsoleTest.csprojResolveAssemblyReference.cache

@@ -30,13 +30,13 @@ namespace MapdrawingTest.Data
 
         public string Birthday { get; set; }
 
-        public static int ConvertToInt(string input)
+        public int ConvertToInt(string input)
         {
             int output = 0;
             return int.TryParse(input, out output) ? output : 0;
         }
 
-        public static double ConvertToDouble(string input)
+        public double ConvertToDouble(string input)
         {
             double output = 0;
             return double.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out output) ? output : 0;
@@ -47,21 +47,19 @@ namespace MapdrawingTest.Data
             return new Postal()
             {
                 City = this.City,
-                PostalCode = this.PostalCode
+                PostalCode = this.PostalCode,
+                Addresses = new List<Address>() { GetAddress() }
             };
         }
 
         public Address GetAddress()
         {
-            Debug.WriteLine(this.CoordX + "  " + this.CoordY);
             return new Address()
             {
                 Street = this.Addr1,
-                //XCoord = this.ConvertToDouble(this.CoordX),
-                //YCoord = this.ConvertToDouble(this.CoordY),
                 XCoord = ConvertToDouble(this.CoordX),
                 YCoord = ConvertToDouble(this.CoordY),
-                Postal = GetPostal()
+                Persons = new List<Person>() { GetPerson() }
             };
         }
 
@@ -69,12 +67,45 @@ namespace MapdrawingTest.Data
         {
             return new Person()
             {
-                PersonId = ConvertToInt(this.Id),
+                Ixd = ConvertToInt(this.Id),
                 Name = this.Name,
                 Phone = this.Phone,
                 BirthDate = this.Birthday,
-                Address = this.GetAddress()
+                //Address = this.GetAddress()
             };
         }
+
+        //public Postal GetPostal()
+        //{
+        //    return new Postal()
+        //    {
+        //        City = this.City,
+        //        PostalCode = this.PostalCode
+        //    };
+        //}
+
+        //public Address GetAddress()
+        //{
+        //    Debug.WriteLine(this.CoordX + "  " + this.CoordY);
+        //    return new Address()
+        //    {
+        //        Street = this.Addr1,
+        //        XCoord = ConvertToDouble(this.CoordX),
+        //        YCoord = ConvertToDouble(this.CoordY),
+        //        Postal = GetPostal()
+        //    };
+        //}
+
+        //public Person GetPerson()
+        //{
+        //    return new Person()
+        //    {
+        //        PersonId = ConvertToInt(this.Id),
+        //        Name = this.Name,
+        //        Phone = this.Phone,
+        //        BirthDate = this.Birthday,
+        //        Address = this.GetAddress()
+        //    };
+        //}
     }
 }

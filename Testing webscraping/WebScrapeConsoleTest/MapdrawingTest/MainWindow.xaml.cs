@@ -32,15 +32,17 @@ namespace MapdrawingTest
         PopulationenRendering populationenRendering;
         private ViewModel view;
         private List<Data.Person> persons;
+        private List<StaticMapData> staticMapDataList;
+        private PersonContext datab;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            Debug.WriteLine(StaticMapData.ConvertToDouble("12.9991601155327").ToString());
+            //            Debug.WriteLine(StaticMapData.ConvertToDouble("12.9991601155327").ToString());
             //12.9991601155327  
             //57.7310176461699
-
+            datab = new PersonContext();
 
             populationenRendering = new PopulationenRendering(mapImage, vbab, canvas);
             //Debug.WriteLine((mainWindow.Width - vbab.Width));
@@ -71,6 +73,7 @@ namespace MapdrawingTest
              dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
              dispatcherTimer.Start();*/
             persons = new List<Data.Person>();
+            staticMapDataList = new List<StaticMapData>();
             //persons.Add(new Data.Person() { PersonId = 1, Id = 2, Name = "Magnus", Phone = "070-3945876", BirthDate = "18 maj", Address = new Data.Address() { Street = "FUCK", XCoord = 66.234, Postal = new Data.Postal { City = "York", PostalCode = "123456" } } });
             //persons.Add(persons.First());
             //persons.Add(persons.First());
@@ -79,7 +82,8 @@ namespace MapdrawingTest
             //persons.Add(persons.First());
             //persons.Add(persons.First());
 
-            PersonsList.ItemsSource = persons;
+            //PersonsList.ItemsSource = persons;
+            PersonsList.ItemsSource = staticMapDataList;
 
             List<TodoItem> items = new List<TodoItem>();
             items.Add(new TodoItem() { Title = "Complete this WPF tutorial", Title2 = "tetstststst", Completion = 45 });
@@ -88,7 +92,7 @@ namespace MapdrawingTest
 
             //Task.Factory.StartNew(() => WebScraping());
             //Task.Run(() => WebScraping());
-            
+
         }
 
         private void WebScraping()
@@ -110,21 +114,138 @@ namespace MapdrawingTest
 
                 staticMapData.Birthday =
                     siteInformationHandler.GetStringData("(?<=födelsedag\\n<\\/h2>\n<p>\n).+?(?=<br\\/>)", RegexOptions.Singleline);
-
-                Person person = staticMapData.GetPerson();
-                Debug.WriteLine(person.Name);
-                using (var db = new PersonContext())
+                Thread.Sleep(1000);
+                //Person person = staticMapData.GetPerson();
+                //Postal postal = staticMapData.GetPostal();
+                //Postal result;
+                //using (var db = new PersonContext())
+                //{
+                //var result = datab.Postals.SingleOrDefault(p => p.PostalCode == postal.PostalCode);
+                //}
+                Postal postal = new Postal()
                 {
-                    db.Persons.Add(person);
-                    db.SaveChanges();
+                    City = "132",
+                    PostalCode = "1212",
+                    Addresses = new List<Address>() {
+                        new Address()
+                        {
+                            AddressId = 1212,
+                            Street = "asd",
+                            XCoord = 1.1,
+                            YCoord = 1.2,
+                            Persons = new List<Person>() { 
+                                    new Person() {
+                                        PersonId = 12121,
+                                                    Ixd = 121,
+                                                    Name = "asdasd",
+                                    Phone = "asdasdasd",
+                                    BirthDate = "asdasd"
+                                } }
+
+                        }
                 }
-             //   this.Dispatcher.Invoke((Action)(() =>
-             //{
-                
-             //}));
-                Dispatcher.Invoke(() => 
+                };
+
+
+
+                //if (result != null)
+                //{
+                //    Address address = new Address()
+                //    {
+                //        AddressId = 1212,
+                //        Street = "asd",
+                //        XCoord = 1.1,
+                //        YCoord = 1.2,
+                //        Persons = new List<Person>() { 
+                //                new Person() {
+                //                    PersonId = 12121,
+                //                                Ixd = 121,
+                //                                Name = "asdasd",
+                //                Phone = "asdasdasd",
+                //                BirthDate = "asdasd"
+                //            } }
+                //    };
+                //    result.Addresses.Add(address);
+                //}
+
+                //using (var db = new PersonContext())
+                {
+                    // if (db.Postals.Any(p => p.PostalCode == person.Address.Postal.PostalCode))
                     {
-                        persons.Add(person);
+                        // person.Address.Postal = db.Postals.Find(person.Address.Postal.PostalCode);
+                        //person.Address.Postal = db.Postals.Where(p => p.PostalCode == person.Address.Postal.PostalCode).FirstOrDefault();
+                        //    System.Windows.Forms.MessageBox.Show("aaaaaaaaaaaaaaaaggg");
+                        //  db.Postals.Remove(db.Postals.Where(p => p.PostalCode == person.Address.Postal.PostalCode).FirstOrDefault());
+                        //  person.Address.Postal.PostalCode = person.Address.Postal.PostalCode  + 1;
+
+                        //    db.SaveChanges();
+                    }
+
+                    //foreach (Person p in db.Persons)
+                    //{
+                    //    Debug.WriteLine(p.Name);
+                    //}
+                    //db.Persons.Add(person);
+
+                    //if (db.Postals.Any(p => p.PostalCode == person.Address.Postal.PostalCode))
+                    //{
+                    //    //  db.Postals.Remove(db.Postals.Where(p => p.PostalCode == person.Address.Postal.PostalCode).FirstOrDefault());
+                    //}
+                    //if (db.Postals.Any(p => p.PostalCode == person.Address.Postal.PostalCode))
+                    //{
+                    //    db.Postals.Find(person.Address.Postal.PostalCode);
+                    //}
+
+                    //if (db.Postals != null && db.Postals.Any(p => p.PostalCode == staticMapData.PostalCode))
+                    //{
+                    //    postal.Addresses.Add(staticMapData.GetAddress());
+                    //    db.Entry(postal).State = System.Data.Entity.EntityState.Modified;
+                    //    db.Entry(postal.Addresses).State = System.Data.Entity.EntityState.Modified;
+                    //}
+                    //else
+                    //{
+                    //    db.Entry(postal).State = System.Data.Entity.EntityState.Added;
+                    //}
+                    datab.Postals.Attach(postal);
+                    datab.Entry(postal).State = System.Data.Entity.EntityState.Added;
+
+
+                    //db.Postals.Attach(postal);
+
+                    //var entry = db.Entry(postal);
+
+                    //if (db.Persons.Any(p => p.PersonId == person.PersonId))
+                    //{
+                    //    entry.State = System.Data.Entity.EntityState.Modified;
+                    //    Debug.WriteLine("--- MODIFIED ---");
+                    //}
+                    //else
+                    //{
+                    //    entry.State = System.Data.Entity.EntityState.Added;
+                    //    Debug.WriteLine("--- ADDED ----");
+                    //}
+
+
+
+
+
+                    //foreach (Postal p in db.Postals)
+                    //{
+                    //    Debug.WriteLine("+++++++++++++++++++++------------- " + p.PostalCode);
+                    //}
+                    // other changed properties
+                    datab.SaveChanges();
+
+                    // db.SaveChanges();
+                }
+                //   this.Dispatcher.Invoke((Action)(() =>
+                //{
+
+                //}));
+                Dispatcher.Invoke(() =>
+                    {
+                        //persons.Add(person);
+                        staticMapDataList.Add(staticMapData);
                         PersonsList.InvalidateArrange();
                         PersonsList.UpdateLayout();
                         PersonsList.Items.Refresh();
@@ -179,18 +300,18 @@ namespace MapdrawingTest
              {
                 
              }));*/
-        //    populationenRendering.StartRendering();
-        //    //Task.Factory.StartNew
-        //    new Thread(() =>
-        //    {
-        //        for (int i = 0; i < 100000; i++)
-        //        {
-        //            double x = r.Next(11113056, 24150556) / 1000000.0;
-        //            double y = r.Next(55336944, 69060000) / 1000000.0;
-        //            populationenRendering.AddCoordinate(new Point(x, y));
-        //            Thread.Sleep(100);
-        //        }
-        //    }).Start();
+            //    populationenRendering.StartRendering();
+            //    //Task.Factory.StartNew
+            //    new Thread(() =>
+            //    {
+            //        for (int i = 0; i < 100000; i++)
+            //        {
+            //            double x = r.Next(11113056, 24150556) / 1000000.0;
+            //            double y = r.Next(55336944, 69060000) / 1000000.0;
+            //            populationenRendering.AddCoordinate(new Point(x, y));
+            //            Thread.Sleep(100);
+            //        }
+            //    }).Start();
         }
     }
 

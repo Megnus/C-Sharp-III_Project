@@ -8,7 +8,7 @@ namespace WebScrapeConsoleTest
 {
     public class Addressx
     {
-        public int AddressId { get; set; }
+        public int AddressIdc { get; set; }
 
         public string Street { get; set; }
 

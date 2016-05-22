@@ -50,7 +50,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Address.cs" />
+    <Compile Include="Addressx.cs" />
     <Compile Include="DatabaseHandler.cs" />
     <Compile Include="MapDrawer.cs" />
     <Compile Include="ObjectMapper.cs" />

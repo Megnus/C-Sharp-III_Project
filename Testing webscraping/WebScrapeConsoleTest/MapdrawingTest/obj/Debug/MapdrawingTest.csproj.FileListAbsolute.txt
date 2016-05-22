@@ -34,3 +34,5 @@ C:\source\lab\Kurser\C# III - Project\C-Sharp-III_Project\Testing webscraping\We
 C:\source\lab\Kurser\C# III - Project\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\MapdrawingTest\bin\Debug\EntityFramework.SqlServer.xml
 C:\source\lab\Kurser\C# III - Project\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\MapdrawingTest\bin\Debug\Newtonsoft.Json.dll
 C:\source\lab\Kurser\C# III - Project\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\MapdrawingTest\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\MapdrawingTest\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Testing webscraping\WebScrapeConsoleTest\MapdrawingTest\bin\Debug\Newtonsoft.Json.xml
