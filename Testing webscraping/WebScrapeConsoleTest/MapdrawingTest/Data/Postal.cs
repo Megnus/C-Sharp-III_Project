@@ -24,6 +24,6 @@ namespace MapdrawingTest.Data
 
         public string City { get; set; }
 
-        public ICollection<Address> Addresses { get; set; }
+        public virtual List<Address> Addresses { get; set; }
     }
 }

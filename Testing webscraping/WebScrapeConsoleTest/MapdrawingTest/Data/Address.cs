@@ -26,6 +26,6 @@ namespace MapdrawingTest.Data
 
         public double YCoord { get; set; }
 
-        public ICollection<Person> Persons { get; set; }
+        public virtual List<Person> Persons { get; set; }
     }
 }

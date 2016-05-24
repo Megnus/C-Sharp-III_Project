@@ -19,6 +19,7 @@ using System.Diagnostics;
 using MapdrawingTest.Web;
 using MapdrawingTest.Data;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace MapdrawingTest
 {
@@ -42,7 +43,7 @@ namespace MapdrawingTest
             //            Debug.WriteLine(StaticMapData.ConvertToDouble("12.9991601155327").ToString());
             //12.9991601155327  
             //57.7310176461699
-            datab = new PersonContext();
+            //datab = new PersonContext();
 
             populationenRendering = new PopulationenRendering(mapImage, vbab, canvas);
             //Debug.WriteLine((mainWindow.Width - vbab.Width));
@@ -76,23 +77,12 @@ namespace MapdrawingTest
             staticMapDataList = new List<StaticMapData>();
             //persons.Add(new Data.Person() { PersonId = 1, Id = 2, Name = "Magnus", Phone = "070-3945876", BirthDate = "18 maj", Address = new Data.Address() { Street = "FUCK", XCoord = 66.234, Postal = new Data.Postal { City = "York", PostalCode = "123456" } } });
             //persons.Add(persons.First());
-            //persons.Add(persons.First());
-            //persons.Add(persons.First());
-            //persons.Add(persons.First());
-            //persons.Add(persons.First());
-            //persons.Add(persons.First());
 
             //PersonsList.ItemsSource = persons;
             PersonsList.ItemsSource = staticMapDataList;
 
-            List<TodoItem> items = new List<TodoItem>();
-            items.Add(new TodoItem() { Title = "Complete this WPF tutorial", Title2 = "tetstststst", Completion = 45 });
-            items.Add(new TodoItem() { Title = "Learn C#", Completion = 80 });
-            items.Add(new TodoItem() { Title = "Wash the car", Completion = 0 });
-
             //Task.Factory.StartNew(() => WebScraping());
             //Task.Run(() => WebScraping());
-
         }
 
         private void WebScraping()
@@ -100,9 +90,16 @@ namespace MapdrawingTest
             SiteInformationHandler<StaticMapData> siteInformationHandler =
                 new SiteInformationHandler<StaticMapData>("http://www.torget.se/personer/Stockholm/TA_{0}/", "staticMapData");
 
-            siteInformationHandler.SetIndex(79779);
-            int x = 0;
-            while (x++ < 1000)
+            //siteInformationHandler.SetIndex(79779);
+            
+            int count = 0;
+            using (var db = new PersonContext())
+            {
+                count = db.Persons.Select(p => p.UrlId).DefaultIfEmpty(800).Max();
+                siteInformationHandler.SetIndex(count);
+            }
+
+            while (Dispatcher.Thread.IsAlive)
             {
                 if (!siteInformationHandler.GetNextIndex())
                 {
@@ -114,142 +111,68 @@ namespace MapdrawingTest
 
                 staticMapData.Birthday =
                     siteInformationHandler.GetStringData("(?<=födelsedag\\n<\\/h2>\n<p>\n).+?(?=<br\\/>)", RegexOptions.Singleline);
-                Thread.Sleep(1000);
-                //Person person = staticMapData.GetPerson();
-                //Postal postal = staticMapData.GetPostal();
-                //Postal result;
-                //using (var db = new PersonContext())
-                //{
-                //var result = datab.Postals.SingleOrDefault(p => p.PostalCode == postal.PostalCode);
-                //}
-                Postal postal = new Postal()
+
+                staticMapData.Phone = 
+                    siteInformationHandler.GetStringData("(?<=\"telephone\">).+?(?=</li>)", RegexOptions.Singleline).Replace("\n", String.Empty);
+
+                staticMapData.CoordX = staticMapData.CoordX.Replace(',', '.');
+                staticMapData.CoordY = staticMapData.CoordY.Replace(',', '.');
+
+                Dispatcher.Invoke(() =>
                 {
-                    City = "132",
-                    PostalCode = "1212",
-                    Addresses = new List<Address>() {
-                        new Address()
-                        {
-                            AddressId = 1212,
-                            Street = "asd",
-                            XCoord = 1.1,
-                            YCoord = 1.2,
-                            Persons = new List<Person>() { 
-                                    new Person() {
-                                        PersonId = 12121,
-                                                    Ixd = 121,
-                                                    Name = "asdasd",
-                                    Phone = "asdasdasd",
-                                    BirthDate = "asdasd"
-                                } }
+                    //persons.Add(person);
+                    staticMapDataList.Add(staticMapData);
+                    PersonsList.InvalidateArrange();
+                    PersonsList.UpdateLayout();
+                    PersonsList.Items.Refresh();
+                });
 
-                        }
-                }
-                };
-
-
-
-                //if (result != null)
-                //{
-                //    Address address = new Address()
-                //    {
-                //        AddressId = 1212,
-                //        Street = "asd",
-                //        XCoord = 1.1,
-                //        YCoord = 1.2,
-                //        Persons = new List<Person>() { 
-                //                new Person() {
-                //                    PersonId = 12121,
-                //                                Ixd = 121,
-                //                                Name = "asdasd",
-                //                Phone = "asdasdasd",
-                //                BirthDate = "asdasd"
-                //            } }
-                //    };
-                //    result.Addresses.Add(address);
-                //}
-
-                //using (var db = new PersonContext())
+                //Postal postal; // = staticMapData.GetPostal();
+                using (var db = new PersonContext())
                 {
-                    // if (db.Postals.Any(p => p.PostalCode == person.Address.Postal.PostalCode))
+                    Postal postal = db.Postals.Where(x =>
+                        x.PostalCode == staticMapData.PostalCode &&
+                        x.City == staticMapData.City).FirstOrDefault();
+
+                    if (postal == null)
                     {
-                        // person.Address.Postal = db.Postals.Find(person.Address.Postal.PostalCode);
-                        //person.Address.Postal = db.Postals.Where(p => p.PostalCode == person.Address.Postal.PostalCode).FirstOrDefault();
-                        //    System.Windows.Forms.MessageBox.Show("aaaaaaaaaaaaaaaaggg");
-                        //  db.Postals.Remove(db.Postals.Where(p => p.PostalCode == person.Address.Postal.PostalCode).FirstOrDefault());
-                        //  person.Address.Postal.PostalCode = person.Address.Postal.PostalCode  + 1;
-
-                        //    db.SaveChanges();
+                        db.Postals.Add(staticMapData.GetPostal());
+                        db.SaveChanges();
+                        continue;
                     }
 
-                    //foreach (Person p in db.Persons)
-                    //{
-                    //    Debug.WriteLine(p.Name);
-                    //}
-                    //db.Persons.Add(person);
+                    Address address = db.Addresses.Where(x =>
+                            x.Street == staticMapData.Addr1 &&
+                            x.XCoord.ToString() == staticMapData.CoordX &&
+                            x.YCoord.ToString() == staticMapData.CoordY).FirstOrDefault();
 
-                    //if (db.Postals.Any(p => p.PostalCode == person.Address.Postal.PostalCode))
-                    //{
-                    //    //  db.Postals.Remove(db.Postals.Where(p => p.PostalCode == person.Address.Postal.PostalCode).FirstOrDefault());
-                    //}
-                    //if (db.Postals.Any(p => p.PostalCode == person.Address.Postal.PostalCode))
-                    //{
-                    //    db.Postals.Find(person.Address.Postal.PostalCode);
-                    //}
-
-                    //if (db.Postals != null && db.Postals.Any(p => p.PostalCode == staticMapData.PostalCode))
-                    //{
-                    //    postal.Addresses.Add(staticMapData.GetAddress());
-                    //    db.Entry(postal).State = System.Data.Entity.EntityState.Modified;
-                    //    db.Entry(postal.Addresses).State = System.Data.Entity.EntityState.Modified;
-                    //}
-                    //else
-                    //{
-                    //    db.Entry(postal).State = System.Data.Entity.EntityState.Added;
-                    //}
-                    datab.Postals.Attach(postal);
-                    datab.Entry(postal).State = System.Data.Entity.EntityState.Added;
-
-
-                    //db.Postals.Attach(postal);
-
-                    //var entry = db.Entry(postal);
-
-                    //if (db.Persons.Any(p => p.PersonId == person.PersonId))
-                    //{
-                    //    entry.State = System.Data.Entity.EntityState.Modified;
-                    //    Debug.WriteLine("--- MODIFIED ---");
-                    //}
-                    //else
-                    //{
-                    //    entry.State = System.Data.Entity.EntityState.Added;
-                    //    Debug.WriteLine("--- ADDED ----");
-                    //}
-
-
-
-
-
-                    //foreach (Postal p in db.Postals)
-                    //{
-                    //    Debug.WriteLine("+++++++++++++++++++++------------- " + p.PostalCode);
-                    //}
-                    // other changed properties
-                    datab.SaveChanges();
-
-                    // db.SaveChanges();
-                }
-                //   this.Dispatcher.Invoke((Action)(() =>
-                //{
-
-                //}));
-                Dispatcher.Invoke(() =>
+                    if (address == null)
                     {
-                        //persons.Add(person);
-                        staticMapDataList.Add(staticMapData);
-                        PersonsList.InvalidateArrange();
-                        PersonsList.UpdateLayout();
-                        PersonsList.Items.Refresh();
-                    });
+                        postal.Addresses.Add(staticMapData.GetAddress());
+                        db.SaveChanges();
+                        continue;
+                    }
+
+                    Person person = db.Persons.Where(x =>
+                            x.Name == staticMapData.Name &&
+                            x.BirthDate == staticMapData.Birthday &&
+                            x.Phone == staticMapData.Phone).FirstOrDefault();
+
+                    if (person == null)
+                    {
+                        address.Persons.Add(staticMapData.GetPerson());
+                        db.SaveChanges();
+                    }
+
+                    //Postal post = db.Postals.First();
+                    //post.Addresses.Add(staticMapData.GetAddress());
+                    //post.Addresses.Last().Persons.Add(staticMapData.GetPerson());
+                    //db.Postals.Add(postal);
+
+                    //db.SaveChanges();
+                }
+
+
                 //PersonsList.UpdateLayout()
                 //persons.Add(person);
             }

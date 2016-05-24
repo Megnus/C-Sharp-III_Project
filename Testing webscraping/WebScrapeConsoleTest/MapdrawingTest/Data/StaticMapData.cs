@@ -67,45 +67,11 @@ namespace MapdrawingTest.Data
         {
             return new Person()
             {
-                Ixd = ConvertToInt(this.Id),
+                UrlId = ConvertToInt(this.Id),
                 Name = this.Name,
                 Phone = this.Phone,
                 BirthDate = this.Birthday,
-                //Address = this.GetAddress()
             };
         }
-
-        //public Postal GetPostal()
-        //{
-        //    return new Postal()
-        //    {
-        //        City = this.City,
-        //        PostalCode = this.PostalCode
-        //    };
-        //}
-
-        //public Address GetAddress()
-        //{
-        //    Debug.WriteLine(this.CoordX + "  " + this.CoordY);
-        //    return new Address()
-        //    {
-        //        Street = this.Addr1,
-        //        XCoord = ConvertToDouble(this.CoordX),
-        //        YCoord = ConvertToDouble(this.CoordY),
-        //        Postal = GetPostal()
-        //    };
-        //}
-
-        //public Person GetPerson()
-        //{
-        //    return new Person()
-        //    {
-        //        PersonId = ConvertToInt(this.Id),
-        //        Name = this.Name,
-        //        Phone = this.Phone,
-        //        BirthDate = this.Birthday,
-        //        Address = this.GetAddress()
-        //    };
-        //}
     }
 }

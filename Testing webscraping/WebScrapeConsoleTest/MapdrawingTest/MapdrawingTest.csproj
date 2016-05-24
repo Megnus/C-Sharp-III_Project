@@ -68,6 +68,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\StaticMapData.cs" />
+    <Compile Include="EndlessProgressbar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Obosolete\WriteableBitmapDemo.cs" />
     <Compile Include="SchoolEntityFramework.cs" />
     <Compile Include="Web\SiteInformationHandler.cs" />
