@@ -12,6 +12,8 @@ namespace MapdrawingTest.Data
     {
         public string Id { get; set; }
 
+        public int UrlIndex { get; set; }
+
         public string Name { get; set; }
 
         public string CoordY { get; set; }
@@ -59,6 +61,7 @@ namespace MapdrawingTest.Data
                 Street = this.Addr1,
                 XCoord = ConvertToDouble(this.CoordX),
                 YCoord = ConvertToDouble(this.CoordY),
+                PostalCode = this.PostalCode,
                 Persons = new List<Person>() { GetPerson() }
             };
         }
@@ -67,7 +70,8 @@ namespace MapdrawingTest.Data
         {
             return new Person()
             {
-                UrlId = ConvertToInt(this.Id),
+                DataId = ConvertToInt(this.Id),
+                UrlIndex = this.UrlIndex,
                 Name = this.Name,
                 Phone = this.Phone,
                 BirthDate = this.Birthday,

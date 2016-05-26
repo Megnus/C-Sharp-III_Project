@@ -89,8 +89,8 @@ namespace MapdrawingTest
         private void WebScraping()
         {
             PersonListInformationHandler personListInformationHandler = new PersonListInformationHandler();
-            StaticMapDataHandler siteInformationHandler = new StaticMapDataHandler();
-            personListInformationHandler.SetPostalNumber(11666);
+            StaticMapDataHandler siteInformationHandler = new StaticMapDataHandler(); 
+            personListInformationHandler.PostalNumber = 11666;
             //siteInformationHandler.SetIndex(79779);
             /*
             int count = 0;
@@ -103,7 +103,9 @@ namespace MapdrawingTest
             while (Dispatcher.Thread.IsAlive)
             {
                 List<string> personList = personListInformationHandler.GetNextList(USER_LIST_REGEX);
-                personList.ForEach(id => HandleUserInformation(siteInformationHandler, int.Parse(id)));
+               // personList.ForEach(id => UpdateDataIdentity(personListInformationHandler.PostalNumber, int.Parse(id)));
+                personList.ForEach(id => HandleUserInformation(
+                    siteInformationHandler, personListInformationHandler.PostalNumber, int.Parse(id)));
             }
         }
 
@@ -113,7 +115,7 @@ namespace MapdrawingTest
         private const string TELEPHONE_REGEX = "(?<=\"telephone\">).+?(?=</li>)";
         private const string LINEFEED_REGEX = "\n";
 
-        private void HandleUserInformation(StaticMapDataHandler infoHandler, int dataId)
+        private void HandleUserInformation(StaticMapDataHandler infoHandler, int urlIndex, int dataId)
         {
             if (infoHandler.SetDataId(dataId))
             {
@@ -122,10 +124,29 @@ namespace MapdrawingTest
                 staticMapData.Phone = infoHandler.GetStringData(TELEPHONE_REGEX).Replace(LINEFEED_REGEX, String.Empty);
                 staticMapData.CoordX = staticMapData.CoordX.Replace(',', '.');
                 staticMapData.CoordY = staticMapData.CoordY.Replace(',', '.');
+                staticMapData.UrlIndex = urlIndex;
                 PrintListBox(staticMapData);
                 UpdateDatabase(staticMapData);
             }
         }
+
+        //private void UpdateDataIdentity(int urlIndex, int dataId)
+        //{
+        //    using (var context = new PersonContext())
+        //    {
+        //        DataIdentity dataIdentity = context.DataIdentities.Where(x => 
+        //            x.UrlIndex == urlIndex).FirstOrDefault();
+                
+        //        if (dataIdentity == null)
+        //        {
+        //            dataIdentity = new DataIdentity() { 
+        //                UrlIndex = urlIndex, DataId = new List<int>() { dataId } };
+        //        }
+                
+        //        context.DataIdentities.Add(dataIdentity);
+        //        context.SaveChanges();
+        //    }
+        //}
 
         private static void UpdateDatabase(StaticMapData staticMapData)
         {
@@ -143,9 +164,8 @@ namespace MapdrawingTest
                 }
 
                 Address address = context.Addresses.Where(x =>
-                        x.Street == staticMapData.Addr1 &&
-                        x.XCoord.ToString() == staticMapData.CoordX &&
-                        x.YCoord.ToString() == staticMapData.CoordY).FirstOrDefault();
+                        x.Street == staticMapData.Addr1 
+                        && x.PostalCode == staticMapData.PostalCode).FirstOrDefault();
 
                 if (address == null)
                 {
@@ -155,9 +175,7 @@ namespace MapdrawingTest
                 }
 
                 Person person = context.Persons.Where(x =>
-                        x.Name == staticMapData.Name &&
-                        x.BirthDate == staticMapData.Birthday &&
-                        x.Phone == staticMapData.Phone).FirstOrDefault();
+                    x.DataId.ToString() == staticMapData.Id).FirstOrDefault();
 
                 if (person == null)
                 {

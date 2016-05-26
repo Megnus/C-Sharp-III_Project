@@ -16,47 +16,26 @@ namespace MapdrawingTest.Web
         private WebClientHandler webClientHandler;
         private string triggerString;
 
-        public int PostalNum { get; set; }
+        public int PostalNumber { get; set; }
 
-        public int PageNum { get; set; }
-
-        //public void GetNext()
-        //{
-        //    PageNum++;
-            
-        //    if (!IsSuccessful())
-        //    {
-        //        PostalNum++;
-        //        PageNum = 1;
-        //    }
-
-        //    string url = String.Format(urlTemplate, PostalNum, PageNum);
-        //    webClientHandler = new WebClientHandler(url);
-        //}
-
-        ////string url = String.Format(urlTemplate, personId);
-
-        public void SetPostalNumber(int postalNumber)
-        {
-            this.PostalNum = postalNumber;
-        }
+        public int PageNumber { get; set; }
 
         public List<string> GetNextList(string regex)
         {
              List<String> list = new List<String>();
              do
              {
-                 string url = String.Format(URL_TEMPLATE, PostalNum, PageNum);
+                 string url = String.Format(URL_TEMPLATE, PostalNumber, PageNumber);
                  WebClientHandler webClientHandler = new WebClientHandler(url);
                  list = webClientHandler.GetSiteContent(regex);
-                 PageNum++;
+                 PageNumber++;
 
                  if (list.Count <= 0 || !webClientHandler.ContainsString(url))
                  {
-                     PageNum = 1;
-                     PostalNum++;
+                     PageNumber = 1;
+                     PostalNumber++;
                  }
-             } while (PageNum == 1);
+             } while (PageNumber == 1);
 
 
             return list;
@@ -64,7 +43,7 @@ namespace MapdrawingTest.Web
 
         private bool IsSuccessful()
         {
-            return webClientHandler.ContainsString(String.Format(URL_TEMPLATE, PostalNum, PageNum));
+            return webClientHandler.ContainsString(String.Format(URL_TEMPLATE, PostalNumber, PageNumber));
         }
     }
 }

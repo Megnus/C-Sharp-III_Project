@@ -26,6 +26,8 @@ namespace MapdrawingTest.Data
 
         public double YCoord { get; set; }
 
+        public string PostalCode { get; set; }
+
         public virtual List<Person> Persons { get; set; }
     }
 }
