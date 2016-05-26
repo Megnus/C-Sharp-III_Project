@@ -31,9 +31,9 @@ namespace MapdrawingTest
     {
         //https://msdn.microsoft.com/en-us/library/system.windows.media.imaging.writeablebitmap(VS.85).aspx
         PopulationenRendering populationenRendering;
-        private ViewModel view;
-        private List<Data.Person> persons;
-        private List<StaticMapData> staticMapDataList;
+       // private List<Data.Person> listboxData;
+        //private List<StaticMapData> staticMapDataList;
+        private Queue<StaticMapData> staticMapDataQueue;
         private PersonContext datab;
 
         public MainWindow()
@@ -48,7 +48,7 @@ namespace MapdrawingTest
             populationenRendering = new PopulationenRendering(mapImage, vbab, canvas);
             //Debug.WriteLine((mainWindow.Width - vbab.Width));
             //Debug.WriteLine((mainWindow.Height - vbab.Height));
-            view = new ViewModel();
+
             /* return;
 
              // Define a StackPanel to host Controls
@@ -73,13 +73,14 @@ namespace MapdrawingTest
              dispatcherTimer.IsEnabled = true;
              dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
              dispatcherTimer.Start();*/
-            persons = new List<Data.Person>();
-            staticMapDataList = new List<StaticMapData>();
+            //listboxData = new List<Data.Person>();
             //persons.Add(new Data.Person() { PersonId = 1, Id = 2, Name = "Magnus", Phone = "070-3945876", BirthDate = "18 maj", Address = new Data.Address() { Street = "FUCK", XCoord = 66.234, Postal = new Data.Postal { City = "York", PostalCode = "123456" } } });
             //persons.Add(persons.First());
 
             //PersonsList.ItemsSource = persons;
-            PersonsList.ItemsSource = staticMapDataList;
+            //staticMapDataList = new List<StaticMapData>();
+            staticMapDataQueue = new Queue<StaticMapData>();
+            staticMapListbox.ItemsSource = staticMapDataQueue;
 
             //Task.Factory.StartNew(() => WebScraping());
             //Task.Run(() => WebScraping());
@@ -87,113 +88,99 @@ namespace MapdrawingTest
 
         private void WebScraping()
         {
-            SiteInformationHandler<StaticMapData> siteInformationHandler =
-                new SiteInformationHandler<StaticMapData>("http://www.torget.se/personer/Stockholm/TA_{0}/", "staticMapData");
-
+            PersonListInformationHandler personListInformationHandler = new PersonListInformationHandler();
+            StaticMapDataHandler siteInformationHandler = new StaticMapDataHandler();
+            personListInformationHandler.SetPostalNumber(11666);
             //siteInformationHandler.SetIndex(79779);
-            
+            /*
             int count = 0;
             using (var db = new PersonContext())
             {
                 count = db.Persons.Select(p => p.UrlId).DefaultIfEmpty(800).Max();
                 siteInformationHandler.SetIndex(count);
-            }
+            }*/
 
             while (Dispatcher.Thread.IsAlive)
             {
-                if (!siteInformationHandler.GetNextIndex())
-                {
-                    continue;
-                }
-
-                StaticMapData staticMapData =
-                    siteInformationHandler.GetSerializedData("(?<=var\\sstaticMapData\\s=\\s\\[).+?(?=\\];)", RegexOptions.Singleline);
-
-                staticMapData.Birthday =
-                    siteInformationHandler.GetStringData("(?<=födelsedag\\n<\\/h2>\n<p>\n).+?(?=<br\\/>)", RegexOptions.Singleline);
-
-                staticMapData.Phone = 
-                    siteInformationHandler.GetStringData("(?<=\"telephone\">).+?(?=</li>)", RegexOptions.Singleline).Replace("\n", String.Empty);
-
-                staticMapData.CoordX = staticMapData.CoordX.Replace(',', '.');
-                staticMapData.CoordY = staticMapData.CoordY.Replace(',', '.');
-
-                Dispatcher.Invoke(() =>
-                {
-                    //persons.Add(person);
-                    staticMapDataList.Add(staticMapData);
-                    PersonsList.InvalidateArrange();
-                    PersonsList.UpdateLayout();
-                    PersonsList.Items.Refresh();
-                });
-
-                //Postal postal; // = staticMapData.GetPostal();
-                using (var db = new PersonContext())
-                {
-                    Postal postal = db.Postals.Where(x =>
-                        x.PostalCode == staticMapData.PostalCode &&
-                        x.City == staticMapData.City).FirstOrDefault();
-
-                    if (postal == null)
-                    {
-                        db.Postals.Add(staticMapData.GetPostal());
-                        db.SaveChanges();
-                        continue;
-                    }
-
-                    Address address = db.Addresses.Where(x =>
-                            x.Street == staticMapData.Addr1 &&
-                            x.XCoord.ToString() == staticMapData.CoordX &&
-                            x.YCoord.ToString() == staticMapData.CoordY).FirstOrDefault();
-
-                    if (address == null)
-                    {
-                        postal.Addresses.Add(staticMapData.GetAddress());
-                        db.SaveChanges();
-                        continue;
-                    }
-
-                    Person person = db.Persons.Where(x =>
-                            x.Name == staticMapData.Name &&
-                            x.BirthDate == staticMapData.Birthday &&
-                            x.Phone == staticMapData.Phone).FirstOrDefault();
-
-                    if (person == null)
-                    {
-                        address.Persons.Add(staticMapData.GetPerson());
-                        db.SaveChanges();
-                    }
-
-                    //Postal post = db.Postals.First();
-                    //post.Addresses.Add(staticMapData.GetAddress());
-                    //post.Addresses.Last().Persons.Add(staticMapData.GetPerson());
-                    //db.Postals.Add(postal);
-
-                    //db.SaveChanges();
-                }
-
-
-                //PersonsList.UpdateLayout()
-                //persons.Add(person);
+                List<string> personList = personListInformationHandler.GetNextList(USER_LIST_REGEX);
+                personList.ForEach(id => HandleUserInformation(siteInformationHandler, int.Parse(id)));
             }
         }
 
+        private const string USER_LIST_REGEX = "(?<=data-id=\")\\d+?(?=\">\n)";
+        private const string STATIC_MAP_REGEX = "(?<=var\\sstaticMapData\\s=\\s\\[).+?(?=\\];)";
+        private const string BIRTHDAY_REGEX = "(?<=födelsedag\\n<\\/h2>\n<p>\n).+?(?=<br\\/>)";
+        private const string TELEPHONE_REGEX = "(?<=\"telephone\">).+?(?=</li>)";
+        private const string LINEFEED_REGEX = "\n";
 
-        //  System.Windows.Threading.DispatcherTimer.Tick handler
-        //
-        //  Updates the Image element with new random colors
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        private void HandleUserInformation(StaticMapDataHandler infoHandler, int dataId)
         {
-            //Update the color array with new random colors
-            Random value = new Random();
-            value.NextBytes(_colorArray);
+            if (infoHandler.SetDataId(dataId))
+            {
+                StaticMapData staticMapData = infoHandler.GetSerializedData(STATIC_MAP_REGEX);
+                staticMapData.Birthday = infoHandler.GetStringData(BIRTHDAY_REGEX);
+                staticMapData.Phone = infoHandler.GetStringData(TELEPHONE_REGEX).Replace(LINEFEED_REGEX, String.Empty);
+                staticMapData.CoordX = staticMapData.CoordX.Replace(',', '.');
+                staticMapData.CoordY = staticMapData.CoordY.Replace(',', '.');
+                PrintListBox(staticMapData);
+                UpdateDatabase(staticMapData);
+            }
+        }
 
-            //Update writeable bitmap with the colorArray to the image.
-            writeableBitmap.WritePixels(_rect, _colorArray, _stride, 0);
+        private static void UpdateDatabase(StaticMapData staticMapData)
+        {
+            using (var context = new PersonContext())
+            {
+                Postal postal = context.Postals.Where(x =>
+                    x.PostalCode == staticMapData.PostalCode &&
+                    x.City == staticMapData.City).FirstOrDefault();
 
-            //Set the Image source.
-            image.Source = writeableBitmap;
+                if (postal == null)
+                {
+                    context.Postals.Add(staticMapData.GetPostal());
+                    context.SaveChanges();
+                    return;
+                }
 
+                Address address = context.Addresses.Where(x =>
+                        x.Street == staticMapData.Addr1 &&
+                        x.XCoord.ToString() == staticMapData.CoordX &&
+                        x.YCoord.ToString() == staticMapData.CoordY).FirstOrDefault();
+
+                if (address == null)
+                {
+                    postal.Addresses.Add(staticMapData.GetAddress());
+                    context.SaveChanges();
+                    return;
+                }
+
+                Person person = context.Persons.Where(x =>
+                        x.Name == staticMapData.Name &&
+                        x.BirthDate == staticMapData.Birthday &&
+                        x.Phone == staticMapData.Phone).FirstOrDefault();
+
+                if (person == null)
+                {
+                    address.Persons.Add(staticMapData.GetPerson());
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        private void PrintListBox(StaticMapData staticMapData)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                staticMapDataQueue.Enqueue(staticMapData);
+                staticMapListbox.InvalidateArrange();
+ 
+                if (staticMapDataQueue.Count > 10)
+                {
+                    staticMapDataQueue.Dequeue();
+                }
+                
+                staticMapListbox.Items.Refresh();
+            });
         }
 
         private Image image = new Image();
@@ -237,33 +224,4 @@ namespace MapdrawingTest
             //    }).Start();
         }
     }
-
-    public class TodoItem
-    {
-        public string Title { get; set; }
-        public string Title2 { get; set; }
-        public int Completion { get; set; }
-    }
-
-    public class ViewModel
-    {
-        public List<Personal> Items
-        {
-            get
-            {
-                return new List<Personal>
-            {
-                new Personal { Name = "P1", Age = 1 },
-                new Personal { Name = "P2", Age = 2 }
-            };
-            }
-        }
-    }
-
-    public class Personal
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
-    }
-
 }

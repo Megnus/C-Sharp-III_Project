@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MapdrawingTest.Web
@@ -17,10 +18,22 @@ namespace MapdrawingTest.Web
         {
             using (WebClient webClient = new WebClient())
             {
-                webClient.Headers.Add("User-Agent: Other");
-                byte[] reqHTML = webClient.DownloadData(url);
-                UTF8Encoding objUTF8 = new UTF8Encoding();
-                encoded = objUTF8.GetString(reqHTML);
+                for (int i = 0; i < 360; i++)
+                {
+                    try
+                    {
+                        webClient.Headers.Add("User-Agent: Other");
+                        byte[] reqHTML = webClient.DownloadData(url);
+                        UTF8Encoding objUTF8 = new UTF8Encoding();
+                        encoded = objUTF8.GetString(reqHTML);
+                        break;
+                    }
+                    catch
+                    {
+                        Thread.Sleep(10000);
+                    }   
+                }
+                
             }
         }
 
@@ -30,15 +43,14 @@ namespace MapdrawingTest.Web
         }
 
         //Match match = Regex.Match(encoded, "(?<=var\\sstaticMapData\\s=\\s\\[).+?(?=\\];)", RegexOptions.Singleline);
-        public List<string> GetSiteContent(string regex, RegexOptions regexOpt)
+        public List<string> GetSiteContent(string regex)
         {
             List<string> extractedData = new List<string>();
-            Match match = Regex.Match(encoded, regex, regexOpt);
+            Match match = Regex.Match(encoded, regex, RegexOptions.Singleline);
 
-            if (match.Success)
+            while (match.Success)
             {
                 extractedData.Add(match.Value);
-                Console.WriteLine(match.Value);
                 match = match.NextMatch();
             }
 

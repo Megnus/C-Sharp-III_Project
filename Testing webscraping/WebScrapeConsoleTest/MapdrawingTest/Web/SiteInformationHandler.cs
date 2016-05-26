@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MapdrawingTest.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,56 +9,48 @@ using System.Threading.Tasks;
 
 namespace MapdrawingTest.Web
 {
-    //WebIndexInformationHandler
-    class SiteInformationHandler<T>
+    class StaticMapDataHandler
     {
-        //Match match = Regex.Match(encoded, "(?<=var\\sstaticMapData\\s=\\s\\[).+?(?=\\];)", RegexOptions.Singleline)
-        //const string strUrl = "http://www.torget.se/personer/Stockholm/TA_79779/";
-        private string urlTemplate = "http://www.torget.se/personer/Stockholm/TA_{0}/";
-        private string regex;
-        private RegexOptions regexOpt;
-        private int index = 0;
+        private const string URL_TEMPLATE = "http://www.torget.se/personer/-/TA_{0}/";
+        private const string TRIGGER_STRING = "staticMapData";
+        private int dataId = 0;
         private WebClientHandler webClientHandler;
-        private string triggerString;
-        //Uses the web client handler
-        public SiteInformationHandler(string urlTemplate, string triggerString) //string url = String.Format(urlTemplate, personId);
+      
+        public StaticMapDataHandler()
         {
-            this.urlTemplate = urlTemplate;
-            this.triggerString = triggerString;
             LoadWebClientHandler();
         }
 
-        public T GetSerializedData(string regex, RegexOptions regexOpt)
+        public StaticMapData GetSerializedData(string regex)
         {
-            return JsonConvert.DeserializeObject<T>(GetStringData(regex, regexOpt));
+            return JsonConvert.DeserializeObject<StaticMapData>(GetStringData(regex));
         }
 
-        public string GetStringData(string regex, RegexOptions regexOpt)
+        public string GetStringData(string regex)
         {
-            return webClientHandler.GetSiteContent(regex, regexOpt).FirstOrDefault();
+            return webClientHandler.GetSiteContent(regex).FirstOrDefault();
         }
 
-        public bool SetIndex(int index)
+        public bool SetDataId(int dataId)
         {
-            this.index = index;
+            this.dataId = dataId;
             return LoadWebClientHandler();
         }
 
         public bool GetNextIndex()
         {
-            this.index++;
-            Console.WriteLine(index);
+            this.dataId++;
             return LoadWebClientHandler();
         }
 
         public bool IsSuccessful()
         {
-            return webClientHandler.ContainsString(triggerString);
+            return webClientHandler.ContainsString(TRIGGER_STRING);
         }
 
         private bool LoadWebClientHandler()
         {
-            string url = String.Format(urlTemplate, this.index);
+            string url = String.Format(URL_TEMPLATE, this.dataId);
             webClientHandler = new WebClientHandler(url);
             return IsSuccessful();
         }
