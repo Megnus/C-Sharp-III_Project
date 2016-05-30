@@ -47,15 +47,23 @@ namespace MapdrawingTest
                 Debug.WriteLine("Rendering started");
                 enableRendering = true;
                 System.Windows.Point p;
-
                 while (enableRendering)
                 {
-                    cq.TryDequeue(out p);
-                    Render(p.X, p.Y);
-                    Thread.Sleep(500);
+                    if (cq.Count > 0)
+                    {
+                        cq.TryDequeue(out p);
+                        Render(p.X, p.Y);
+                        Thread.Sleep(0);
+                    }
+                    else
+                    {
+                        Thread.Sleep(250);
+                    }
+                    
+                    
                 }
             }).Start();
-            Debug.WriteLine("Rendering stoped");
+            
         }
 
         private System.Drawing.Point TransForm(System.Windows.Point point)
@@ -79,12 +87,10 @@ namespace MapdrawingTest
             try
             {
                 bitmap = new BitmapImage(new Uri("C:\\Users\\Magnus\\Dropbox\\Kurser\\Programmering med C# III\\C-Sharp-III_Project\\Testing webscraping\\WebScrapeConsoleTest\\WebScrapeConsoleTest\\sweden-map.bmp", UriKind.Absolute));
-
             }
             catch
             {
                 bitmap = new BitmapImage(new Uri("C:\\Users\\msundstr\\Pictures\\sweden-map.bmp", UriKind.Absolute));
-
             }
 
             writeableBitmap = new WriteableBitmap(bitmap);
@@ -130,15 +136,7 @@ namespace MapdrawingTest
             firstLine.Stroke = System.Windows.Media.Brushes.Black;
             secondLine.Stroke = System.Windows.Media.Brushes.Black;
 
-            firstLine.X1 = -5 + 200;
-            firstLine.X2 = 5 + 200;
-            firstLine.Y1 = -5 + 200;
-            firstLine.Y2 = 5 + 200;
-
-            secondLine.X1 = 5 + 200;
-            secondLine.X2 = -5 + 200;
-            secondLine.Y1 = -5 + 200;
-            secondLine.Y2 = 5 + 200;
+           
 
             firstLine.HorizontalAlignment = HorizontalAlignment.Left;
             firstLine.VerticalAlignment = VerticalAlignment.Center;
@@ -153,33 +151,81 @@ namespace MapdrawingTest
             secondLine.VerticalAlignment = VerticalAlignment.Center;
             secondLine.StrokeThickness = 1;
 
-            ellipse = new Ellipse { Width = 16, Height = 16 };
-            double left = 200 - (16 / 2);
-            double top = 200 - (16 / 2);
-            ellipse.Margin = new Thickness(left, top, 0, 0);
-            ellipse.Stroke = System.Windows.Media.Brushes.Black;
-            ellipse.SnapsToDevicePixels = true;
+           
 
             canvas.Children.Add(firstLine);
             canvas.Children.Add(secondLine);
-            canvas.Children.Add(ellipse);
+   
+
+
+            //this.canvas = canvas;
+
+            //firstLine = new Line();
+            //secondLine = new Line();
+            //firstLine.Stroke = System.Windows.Media.Brushes.Black;
+            //secondLine.Stroke = System.Windows.Media.Brushes.Black;
+
+            //firstLine.X1 = -5 + 200;
+            //firstLine.X2 = 5 + 200;
+            //firstLine.Y1 = -5 + 200;
+            //firstLine.Y2 = 5 + 200;
+
+            //secondLine.X1 = 5 + 200;
+            //secondLine.X2 = -5 + 200;
+            //secondLine.Y1 = -5 + 200;
+            //secondLine.Y2 = 5 + 200;
+
+            //firstLine.HorizontalAlignment = HorizontalAlignment.Left;
+            //firstLine.VerticalAlignment = VerticalAlignment.Center;
+            //firstLine.StrokeThickness = 1;
+            //firstLine.SnapsToDevicePixels = true;
+
+            //secondLine.HorizontalAlignment = HorizontalAlignment.Left;
+            //secondLine.VerticalAlignment = VerticalAlignment.Center;
+            //secondLine.StrokeThickness = 1;
+            //secondLine.SnapsToDevicePixels = true;
+
+            //secondLine.VerticalAlignment = VerticalAlignment.Center;
+            //secondLine.StrokeThickness = 1;
+
+            //ellipse = new Ellipse { Width = 16, Height = 16 };
+            //double left = 200 - (16 / 2);
+            //double top = 200 - (16 / 2);
+            //ellipse.Margin = new Thickness(left, top, 0, 0);
+            //ellipse.Stroke = System.Windows.Media.Brushes.Black;
+            //ellipse.SnapsToDevicePixels = true;
+
+            //canvas.Children.Add(firstLine);
+            //canvas.Children.Add(secondLine);
+            //canvas.Children.Add(ellipse);
         }
 
         public void SetPosition(System.Windows.Point point)
         {
-            firstLine.X1 = -5 + point.X;
-            firstLine.X2 = 5 + point.X;
-            firstLine.Y1 = -5 + point.Y;
-            firstLine.Y2 = 5 + point.Y;
+            firstLine.X1 = -10 + point.X;
+            firstLine.X2 = 10 + point.X;
+            firstLine.Y1 = point.Y;
+            firstLine.Y2 = point.Y;
 
-            secondLine.X1 = 5 + point.X;
-            secondLine.X2 = -5 + point.X;
-            secondLine.Y1 = -5 + point.Y;
-            secondLine.Y2 = 5 + point.Y;
+            secondLine.X1 = point.X;
+            secondLine.X2 = point.X;
+            secondLine.Y1 = -10 + point.Y;
+            secondLine.Y2 = 10 + point.Y;
 
-            double left = point.X - (16 / 2);
-            double top = point.Y - (16 / 2);
-            ellipse.Margin = new Thickness(left, top, 0, 0);
+
+            //firstLine.X1 = -5 + point.X;
+            //firstLine.X2 = 5 + point.X;
+            //firstLine.Y1 = -5 + point.Y;
+            //firstLine.Y2 = 5 + point.Y;
+
+            //secondLine.X1 = 5 + point.X;
+            //secondLine.X2 = -5 + point.X;
+            //secondLine.Y1 = -5 + point.Y;
+            //secondLine.Y2 = 5 + point.Y;
+
+            //double left = point.X - (16 / 2);
+            //double top = point.Y - (16 / 2);
+            //ellipse.Margin = new Thickness(left, top, 0, 0);
         }
     }
 }

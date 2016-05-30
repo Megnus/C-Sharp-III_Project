@@ -14,6 +14,8 @@ namespace MapdrawingTest.Data
 
         public int UrlIndex { get; set; }
 
+        public int PageNumber { get; set; }
+
         public string Name { get; set; }
 
         public string CoordY { get; set; }
@@ -72,10 +74,42 @@ namespace MapdrawingTest.Data
             {
                 DataId = ConvertToInt(this.Id),
                 UrlIndex = this.UrlIndex,
+                PageNumber = this.PageNumber,
+                //UrlData = new List<UrlData>() { GetUrlData() },
                 Name = this.Name,
                 Phone = this.Phone,
                 BirthDate = this.Birthday,
             };
         }
+
+     /*   private UrlData urlData;
+
+        public void SetUrlData(UrlData urlData)
+        {
+            if (urlData != null)
+            {
+                this.urlData = urlData;
+            }
+            else
+            {
+                this.urlData = new UrlData()
+                    {
+                        UrlIndex = this.UrlIndex,
+                        PageNumber = this.PageNumber,
+                        Persons = new List<Person>() { GetPerson() }
+                    };
+            }
+        }
+
+        public UrlData GetUrlData()
+        {
+            return new UrlData()
+            {
+                UrlIndex = this.UrlIndex,
+                PageNumber = this.PageNumber,
+                Persons = new List<Person>() { GetPerson() }
+            };
+
+        }*/
     }
 }

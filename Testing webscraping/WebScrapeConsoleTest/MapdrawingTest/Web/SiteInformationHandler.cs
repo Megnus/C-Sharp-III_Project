@@ -11,6 +11,7 @@ namespace MapdrawingTest.Web
 {
     class StaticMapDataHandler
     {
+        //https://nuwber.se/search?q=10405&page=1
         private const string URL_TEMPLATE = "http://www.torget.se/personer/-/TA_{0}/";
         private const string TRIGGER_STRING = "staticMapData";
         private int dataId = 0;
@@ -28,7 +29,7 @@ namespace MapdrawingTest.Web
 
         public string GetStringData(string regex)
         {
-            return webClientHandler.GetSiteContent(regex).FirstOrDefault();
+            return webClientHandler.GetSiteContent(regex).DefaultIfEmpty(String.Empty).FirstOrDefault();
         }
 
         public bool SetDataId(int dataId)

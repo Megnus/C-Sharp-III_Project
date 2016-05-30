@@ -17,11 +17,15 @@ namespace MapdrawingTest.Data
 
         public int UrlIndex { get; set; }
 
+        public int PageNumber { get; set; }
+
         public string Name { get; set; }
 
         public string Phone { get; set; }
 
         public string BirthDate { get; set; }
+
+        //public virtual List<UrlData> UrlData { get; set; }
 
         //[ForeignKey("AddressId")]
         //public int AddressId { get; set; }

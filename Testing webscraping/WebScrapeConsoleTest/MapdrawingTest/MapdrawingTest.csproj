@@ -68,6 +68,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\DataIdentity.cs" />
+    <Compile Include="Data\UrlData.cs" />
     <Compile Include="Data\StaticMapData.cs" />
     <Compile Include="EndlessProgressbar.cs">
       <SubType>UserControl</SubType>

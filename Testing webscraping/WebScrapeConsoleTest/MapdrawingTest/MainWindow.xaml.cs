@@ -31,7 +31,7 @@ namespace MapdrawingTest
     {
         //https://msdn.microsoft.com/en-us/library/system.windows.media.imaging.writeablebitmap(VS.85).aspx
         PopulationenRendering populationenRendering;
-       // private List<Data.Person> listboxData;
+        // private List<Data.Person> listboxData;
         //private List<StaticMapData> staticMapDataList;
         private Queue<StaticMapData> staticMapDataQueue;
         private PersonContext datab;
@@ -89,23 +89,43 @@ namespace MapdrawingTest
         private void WebScraping()
         {
             PersonListInformationHandler personListInformationHandler = new PersonListInformationHandler();
-            StaticMapDataHandler siteInformationHandler = new StaticMapDataHandler(); 
-            personListInformationHandler.PostalNumber = 11666;
-            //siteInformationHandler.SetIndex(79779);
-            /*
-            int count = 0;
-            using (var db = new PersonContext())
+            StaticMapDataHandler siteInformationHandler = new StaticMapDataHandler();
+            //int maxval = new PersonContext()
+            //    .UrlDataRecords.Max(u => u.UrlIndex);
+            //int maxvali = new PersonContext()
+            //    .UrlDataRecords.Max(u => u.UrlIndex);
+
+            Person person = new PersonContext()
+                .Persons.OrderByDescending(u => u.UrlIndex)
+                .ThenByDescending(u => u.PageNumber)
+                .FirstOrDefault();
+
+            if (person == null)
             {
-                count = db.Persons.Select(p => p.UrlId).DefaultIfEmpty(800).Max();
-                siteInformationHandler.SetIndex(count);
-            }*/
+                person = new Person() { UrlIndex = 0, PageNumber = 1 };
+            }
+
+            personListInformationHandler.PostalNumber = person.UrlIndex;
+                //new PersonContext()
+                //.UrlDataRecords.Select(u => u.UrlIndex).DefaultIfEmpty(0).Max();
+            personListInformationHandler.PageNumber = person.PageNumber;
+
+            using (var context = new PersonContext())
+            {
+                foreach (Address a in context.Addresses)
+                {
+                    populationenRendering.AddCoordinate(new Point(a.XCoord, a.YCoord));
+                }
+            }
 
             while (Dispatcher.Thread.IsAlive)
             {
                 List<string> personList = personListInformationHandler.GetNextList(USER_LIST_REGEX);
-               // personList.ForEach(id => UpdateDataIdentity(personListInformationHandler.PostalNumber, int.Parse(id)));
                 personList.ForEach(id => HandleUserInformation(
-                    siteInformationHandler, personListInformationHandler.PostalNumber, int.Parse(id)));
+                    siteInformationHandler, 
+                    personListInformationHandler.PostalNumber,
+                    personListInformationHandler.PageNumber,
+                    int.Parse(id)));
             }
         }
 
@@ -115,8 +135,12 @@ namespace MapdrawingTest
         private const string TELEPHONE_REGEX = "(?<=\"telephone\">).+?(?=</li>)";
         private const string LINEFEED_REGEX = "\n";
 
-        private void HandleUserInformation(StaticMapDataHandler infoHandler, int urlIndex, int dataId)
+        private void HandleUserInformation(StaticMapDataHandler infoHandler, int urlIndex, int pageNumber, int dataId)
         {
+            double x, y;
+            NumberStyles style = NumberStyles.AllowDecimalPoint;
+            CultureInfo culture = CultureInfo.InvariantCulture;
+
             if (infoHandler.SetDataId(dataId))
             {
                 StaticMapData staticMapData = infoHandler.GetSerializedData(STATIC_MAP_REGEX);
@@ -124,7 +148,16 @@ namespace MapdrawingTest
                 staticMapData.Phone = infoHandler.GetStringData(TELEPHONE_REGEX).Replace(LINEFEED_REGEX, String.Empty);
                 staticMapData.CoordX = staticMapData.CoordX.Replace(',', '.');
                 staticMapData.CoordY = staticMapData.CoordY.Replace(',', '.');
+                
+                if (Double.TryParse(staticMapData.CoordX, style, culture, out x)
+                    && Double.TryParse(staticMapData.CoordY, style, culture, out y))
+                {
+                    populationenRendering.AddCoordinate(new Point(x, y));
+
+                }
+
                 staticMapData.UrlIndex = urlIndex;
+                staticMapData.PageNumber = pageNumber;
                 PrintListBox(staticMapData);
                 UpdateDatabase(staticMapData);
             }
@@ -136,13 +169,13 @@ namespace MapdrawingTest
         //    {
         //        DataIdentity dataIdentity = context.DataIdentities.Where(x => 
         //            x.UrlIndex == urlIndex).FirstOrDefault();
-                
+
         //        if (dataIdentity == null)
         //        {
         //            dataIdentity = new DataIdentity() { 
         //                UrlIndex = urlIndex, DataId = new List<int>() { dataId } };
         //        }
-                
+
         //        context.DataIdentities.Add(dataIdentity);
         //        context.SaveChanges();
         //    }
@@ -152,6 +185,12 @@ namespace MapdrawingTest
         {
             using (var context = new PersonContext())
             {
+                //UrlData urlData = context.UrlDataRecords.Where(u => u.UrlIndex == staticMapData.UrlIndex 
+                //    && u.PageNumber == staticMapData.PageNumber).FirstOrDefault();
+
+                //staticMapData.SetUrlData(urlData);
+                
+                
                 Postal postal = context.Postals.Where(x =>
                     x.PostalCode == staticMapData.PostalCode &&
                     x.City == staticMapData.City).FirstOrDefault();
@@ -164,7 +203,7 @@ namespace MapdrawingTest
                 }
 
                 Address address = context.Addresses.Where(x =>
-                        x.Street == staticMapData.Addr1 
+                        x.Street == staticMapData.Addr1
                         && x.PostalCode == staticMapData.PostalCode).FirstOrDefault();
 
                 if (address == null)
@@ -182,6 +221,8 @@ namespace MapdrawingTest
                     address.Persons.Add(staticMapData.GetPerson());
                     context.SaveChanges();
                 }
+
+
             }
         }
 
@@ -191,12 +232,12 @@ namespace MapdrawingTest
             {
                 staticMapDataQueue.Enqueue(staticMapData);
                 staticMapListbox.InvalidateArrange();
- 
+
                 if (staticMapDataQueue.Count > 10)
                 {
                     staticMapDataQueue.Dequeue();
                 }
-                
+
                 staticMapListbox.Items.Refresh();
             });
         }
@@ -223,7 +264,7 @@ namespace MapdrawingTest
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             new Thread(() => WebScraping()).Start();
-
+            populationenRendering.StartRendering();
             /* this.Dispatcher.Invoke((Action)(() =>
              {
                 

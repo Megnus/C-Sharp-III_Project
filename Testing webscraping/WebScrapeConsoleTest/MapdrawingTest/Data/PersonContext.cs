@@ -16,6 +16,8 @@ namespace MapdrawingTest.Data
 
         public DbSet<Postal> Postals { get; set; }
 
+        //public DbSet<UrlData> UrlDataRecords { get; set; }
+
         //public DbSet<DataIdentity> DataIdentities { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
