@@ -48,37 +48,47 @@ namespace MapdrawingTest.Data
 
         public Postal GetPostal()
         {
-            return new Postal()
+            Postal postal = new Postal()
             {
                 City = this.City,
                 PostalCode = this.PostalCode,
-                Addresses = new List<Address>() { GetAddress() }
+                Addresses = new List<Address>()
             };
+
+            postal.Addresses.Add(GetAddress(postal.PostalId));
+
+            return postal;
         }
 
-        public Address GetAddress()
+        public Address GetAddress(int postalId)
         {
-            return new Address()
+            Address address = new Address()
             {
                 Street = this.Addr1,
                 XCoord = ConvertToDouble(this.CoordX),
                 YCoord = ConvertToDouble(this.CoordY),
                 PostalCode = this.PostalCode,
-                Persons = new List<Person>() { GetPerson() }
+                Persons = new List<Person>(),
+                PostalId = postalId
             };
+
+            address.Persons.Add(GetPerson(address.AddressId));
+
+            return address;
+
         }
 
-        public Person GetPerson()
+        public Person GetPerson(int addressId)
         {
             return new Person()
             {
                 DataId = ConvertToInt(this.Id),
                 UrlIndex = this.UrlIndex,
                 PageNumber = this.PageNumber,
-                //UrlData = new List<UrlData>() { GetUrlData() },
                 Name = this.Name,
                 Phone = this.Phone,
                 BirthDate = this.Birthday,
+                AddressId = addressId
             };
         }
 

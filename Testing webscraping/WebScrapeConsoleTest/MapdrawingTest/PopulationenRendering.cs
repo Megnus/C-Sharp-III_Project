@@ -59,8 +59,6 @@ namespace MapdrawingTest
                     {
                         Thread.Sleep(250);
                     }
-                    
-                    
                 }
             }).Start();
             
