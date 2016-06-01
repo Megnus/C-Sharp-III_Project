@@ -21,6 +21,11 @@ using MapdrawingTest.Data;
 using System.Text.RegularExpressions;
 using System.Globalization;
 
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
+
 namespace MapdrawingTest
 {
 
@@ -126,8 +131,9 @@ namespace MapdrawingTest
                     personListInformationHandler.PostalNumber,
                     personListInformationHandler.PageNumber,
                     int.Parse(id)));
-                SearchForName();//.ForEach(x => Debug.WriteLine(x.Name));
+               // var dd = SearchForName();//.ForEach(x => Debug.WriteLine(x.Name));
                 //Debug.WriteLine("------------------------------");
+                SearchForName();
             }
         }
 
@@ -285,8 +291,10 @@ namespace MapdrawingTest
             //    }).Start();
         }
 
-        private List<StaticMapData> SearchForName()
+
+        private void SearchForName()
         {
+            //List<StaticMapData>
             string value = "Anna";
             value = value.ToLower();
             Match match = Regex.Match(value, ".+" + value + ".+");
@@ -297,12 +305,38 @@ namespace MapdrawingTest
             using (var context = new PersonContext())
             {
                 persons = context.Persons.Where(x => x.Name.Contains("Anna")).ToList<Person>();//regex.IsMatch(x.Name));
-                addresses = context.Addresses.Where(a => a.AddressId > 10).ToList();
+                //addresses = context.Addresses.Where(a => a.AddressId == Xxxx.First().AddressId).ToList();
+            }
+            List<int> myint = persons.Select(m => m.AddressId).ToList();
+            using (var context = new PersonContext())
+            {
+                //var Xxxx = context.Persons.Where(x => x.Name.Contains("Anna")).ToList<Person>();//regex.IsMatch(x.Name));
+                addresses = context.Addresses.Where(a => myint.Any(x => x == a.AddressId)).ToList<Address>();
             }
 
-            Debug.WriteLine(addresses.FirstOrDefault().Street);
+            Debug.WriteLine("addresses.FirstOrDefault().Street");
 
-            return null;
         }
+
+        //private async Task<Person> SearchForNamex()
+        //{
+        //    //List<StaticMapData>
+        //    string value = "Anna";
+        //    value = value.ToLower();
+        //    Match match = Regex.Match(value, ".+" + value + ".+");
+        //    Regex regex = new Regex(".+Anna.+");
+        //    StaticMapData s;
+        //    List<Person> persons;
+        //    List<Address> addresses;
+        //    using (var context = new PersonContext())
+        //    {
+        //       var Xxxx = await (context.Persons.Where(x => x.Name.Contains("Anna")).ToListAsync<Person>());//regex.IsMatch(x.Name));
+        //       //addresses = context.Addresses.Where(a => a.AddressId == Xxxx.First().AddressId).ToList();
+        //    }
+
+        //    Debug.WriteLine("addresses.FirstOrDefault().Street");
+
+        //    return null;
+        //}
     }
 }
