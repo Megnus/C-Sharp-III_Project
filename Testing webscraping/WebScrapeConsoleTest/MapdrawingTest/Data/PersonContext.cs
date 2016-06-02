@@ -22,7 +22,14 @@ namespace MapdrawingTest.Data
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            this.Configuration.LazyLoadingEnabled = false;
+            base.Configuration.LazyLoadingEnabled = false;
+            //modelBuilder.Entity<Student>().Map(m =>
+            //{
+            //    m.Properties(p => new { p.StudentId, p.StudentName});
+            //    m.ToTable("StudentInfo");
 
+            //})
           //  modelBuilder.Entity<Address>().HasRequired(x => x.Persons).WithOptional().Map(m => m.MapKey("AddressId"));
 
             //modelBuilder.Entity<Address>().HasRequired(p => p.Persons).WithOptional().Map(x => x.MapKey("PersonId"));

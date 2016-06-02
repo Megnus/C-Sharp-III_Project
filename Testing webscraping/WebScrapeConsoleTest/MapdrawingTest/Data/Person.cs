@@ -27,6 +27,8 @@ namespace MapdrawingTest.Data
 
         public int AddressId { get; set; }
 
+        public virtual Address Address_ { get; set; }
+
         //public virtual List<UrlData> UrlData { get; set; }
 
         //[ForeignKey("AddressId")]

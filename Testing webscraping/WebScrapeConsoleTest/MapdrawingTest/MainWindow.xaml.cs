@@ -216,7 +216,7 @@ namespace MapdrawingTest
 
                 if (address == null)
                 {
-                    postal.Addresses.Add(staticMapData.GetAddress(postal.PostalId));
+                    postal.Addresses.Add(staticMapData.GetAddress(postal.PostalId, postal));
                     context.SaveChanges();
                     return;
                 }
@@ -226,7 +226,7 @@ namespace MapdrawingTest
 
                 if (person == null)
                 {
-                    address.Persons.Add(staticMapData.GetPerson(address.AddressId));
+                    address.Persons.Add(staticMapData.GetPerson(address.AddressId, address));
                     context.SaveChanges();
                 }
 
@@ -313,7 +313,9 @@ namespace MapdrawingTest
                 //var Xxxx = context.Persons.Where(x => x.Name.Contains("Anna")).ToList<Person>();//regex.IsMatch(x.Name));
                 addresses = context.Addresses.Where(a => myint.Any(x => x == a.AddressId)).ToList<Address>();
             }
-
+            //entity framework threw an exception of type 'System.ObjectDisposedException'
+            //The ObjectContext instance has been disposed and can no longer be used for operations that require a connection System.InvalidOperationException {System.ObjectDisposedException}
+            //http://blogs.msdn.com/b/adonet/archive/2011/01/31/using-dbcontext-in-ef-feature-ctp5-part-6-loading-related-entities.aspx
             Debug.WriteLine("addresses.FirstOrDefault().Street");
 
         }

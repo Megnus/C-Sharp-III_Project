@@ -55,12 +55,12 @@ namespace MapdrawingTest.Data
                 Addresses = new List<Address>()
             };
 
-            postal.Addresses.Add(GetAddress(postal.PostalId));
+            postal.Addresses.Add(GetAddress(postal.PostalId, postal));
 
             return postal;
         }
 
-        public Address GetAddress(int postalId)
+        public Address GetAddress(int postalId, Postal postal)
         {
             Address address = new Address()
             {
@@ -69,16 +69,17 @@ namespace MapdrawingTest.Data
                 YCoord = ConvertToDouble(this.CoordY),
                 PostalCode = this.PostalCode,
                 Persons = new List<Person>(),
-                PostalId = postalId
+                PostalId = postalId,
+                Postal_ = postal
             };
 
-            address.Persons.Add(GetPerson(address.AddressId));
+            address.Persons.Add(GetPerson(address.AddressId, address));
 
             return address;
 
         }
 
-        public Person GetPerson(int addressId)
+        public Person GetPerson(int addressId, Address address)
         {
             return new Person()
             {
@@ -88,7 +89,8 @@ namespace MapdrawingTest.Data
                 Name = this.Name,
                 Phone = this.Phone,
                 BirthDate = this.Birthday,
-                AddressId = addressId
+                AddressId = addressId,
+                Address_ = address
             };
         }
 
