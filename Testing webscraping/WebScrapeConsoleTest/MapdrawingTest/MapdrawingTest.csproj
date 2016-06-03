@@ -67,8 +67,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Data\DataIdentity.cs" />
-    <Compile Include="Data\UrlData.cs" />
     <Compile Include="Data\StaticMapData.cs" />
     <Compile Include="EndlessProgressbar.cs">
       <SubType>UserControl</SubType>
@@ -88,7 +86,7 @@
     </Compile>
     <Compile Include="Data\Address.cs" />
     <Compile Include="Data\Person.cs" />
-    <Compile Include="Data\PersonContext.cs" />
+    <Compile Include="Data\InformationContext.cs" />
     <Compile Include="Data\Postal.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

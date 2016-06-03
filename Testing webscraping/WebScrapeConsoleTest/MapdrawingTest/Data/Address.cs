@@ -30,8 +30,6 @@ namespace MapdrawingTest.Data
 
         public virtual List<Person> Persons { get; set; }
 
-        public int PostalId { get; set; }
-
-        public virtual Postal Postal_ { get; set; }
+        public virtual Postal Postal { get; set; }
     }
 }

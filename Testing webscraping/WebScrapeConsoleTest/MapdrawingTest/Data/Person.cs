@@ -10,8 +10,6 @@ namespace MapdrawingTest.Data
 {
     public class Person
     {
-        //public int PersonId { get; set; }
-
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int DataId { get; set; }
 
@@ -27,19 +25,6 @@ namespace MapdrawingTest.Data
 
         public int AddressId { get; set; }
 
-        public virtual Address Address_ { get; set; }
-
-        //public virtual List<UrlData> UrlData { get; set; }
-
-        //[ForeignKey("AddressId")]
-        //public int AddressId { get; set; }
-
-        //public Address Address { get; set; }
-        
-        //public string Link { get; set; }
-
-      //  public string PostalCode { get; set; }
-
-        //public Address Address { get; set; }
+        public virtual Address Address { get; set; }
     }
 }

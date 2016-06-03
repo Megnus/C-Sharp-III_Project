@@ -46,6 +46,31 @@ namespace MapdrawingTest.Data
             return double.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out output) ? output : 0;
         }
 
+        public StaticMapData()
+        {
+
+        }
+
+        public StaticMapData(Person person)
+        {
+            try
+            {
+                Id = person.DataId.ToString();
+                UrlIndex = person.UrlIndex;
+                PageNumber = person.PageNumber;
+                Name = person.Name;
+                Phone = person.Phone;
+                Birthday = person.BirthDate;
+                CoordX = person.Address.XCoord.ToString();
+                CoordY = person.Address.YCoord.ToString();
+                Addr1 = person.Address.Street;
+                PostalCode = person.Address.Postal.PostalCode;
+                City = person.Address.Postal.City;
+            } catch {
+
+            }
+        }
+
         public Postal GetPostal()
         {
             Postal postal = new Postal()
@@ -55,12 +80,12 @@ namespace MapdrawingTest.Data
                 Addresses = new List<Address>()
             };
 
-            postal.Addresses.Add(GetAddress(postal.PostalId, postal));
+            postal.Addresses.Add(GetAddress(postal));
 
             return postal;
         }
 
-        public Address GetAddress(int postalId, Postal postal)
+        public Address GetAddress(Postal postal)
         {
             Address address = new Address()
             {
@@ -69,17 +94,16 @@ namespace MapdrawingTest.Data
                 YCoord = ConvertToDouble(this.CoordY),
                 PostalCode = this.PostalCode,
                 Persons = new List<Person>(),
-                PostalId = postalId,
-                Postal_ = postal
+                Postal = postal
             };
 
-            address.Persons.Add(GetPerson(address.AddressId, address));
+            address.Persons.Add(GetPerson(address));
 
             return address;
 
         }
 
-        public Person GetPerson(int addressId, Address address)
+        public Person GetPerson(Address address)
         {
             return new Person()
             {
@@ -89,39 +113,8 @@ namespace MapdrawingTest.Data
                 Name = this.Name,
                 Phone = this.Phone,
                 BirthDate = this.Birthday,
-                AddressId = addressId,
-                Address_ = address
+                Address = address
             };
         }
-
-     /*   private UrlData urlData;
-
-        public void SetUrlData(UrlData urlData)
-        {
-            if (urlData != null)
-            {
-                this.urlData = urlData;
-            }
-            else
-            {
-                this.urlData = new UrlData()
-                    {
-                        UrlIndex = this.UrlIndex,
-                        PageNumber = this.PageNumber,
-                        Persons = new List<Person>() { GetPerson() }
-                    };
-            }
-        }
-
-        public UrlData GetUrlData()
-        {
-            return new UrlData()
-            {
-                UrlIndex = this.UrlIndex,
-                PageNumber = this.PageNumber,
-                Persons = new List<Person>() { GetPerson() }
-            };
-
-        }*/
     }
 }

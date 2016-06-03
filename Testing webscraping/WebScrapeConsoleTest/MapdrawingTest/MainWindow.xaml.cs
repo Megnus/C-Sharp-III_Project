@@ -39,7 +39,8 @@ namespace MapdrawingTest
         // private List<Data.Person> listboxData;
         //private List<StaticMapData> staticMapDataList;
         private Queue<StaticMapData> staticMapDataQueue;
-        private PersonContext datab;
+        private List<StaticMapData> searchList;
+        private InformationContext datab;
 
         public MainWindow()
         {
@@ -84,15 +85,18 @@ namespace MapdrawingTest
 
             //PersonsList.ItemsSource = persons;
             //staticMapDataList = new List<StaticMapData>();
-            staticMapDataQueue = new Queue<StaticMapData>();
-            staticMapListbox.ItemsSource = staticMapDataQueue;
+
 
             //Task.Factory.StartNew(() => WebScraping());
             //Task.Run(() => WebScraping());
+
+
         }
 
         private void WebScraping()
         {
+
+
             PersonListInformationHandler personListInformationHandler = new PersonListInformationHandler();
             StaticMapDataHandler siteInformationHandler = new StaticMapDataHandler();
             //int maxval = new PersonContext()
@@ -100,7 +104,7 @@ namespace MapdrawingTest
             //int maxvali = new PersonContext()
             //    .UrlDataRecords.Max(u => u.UrlIndex);
 
-            Person person = new PersonContext()
+            Person person = new InformationContext()
                 .Persons.OrderByDescending(u => u.UrlIndex)
                 .ThenByDescending(u => u.PageNumber)
                 .FirstOrDefault();
@@ -115,7 +119,7 @@ namespace MapdrawingTest
             //.UrlDataRecords.Select(u => u.UrlIndex).DefaultIfEmpty(0).Max();
             personListInformationHandler.PageNumber = person.PageNumber;
 
-            using (var context = new PersonContext())
+            using (var context = new InformationContext())
             {
                 foreach (Address a in context.Addresses)
                 {
@@ -131,9 +135,9 @@ namespace MapdrawingTest
                     personListInformationHandler.PostalNumber,
                     personListInformationHandler.PageNumber,
                     int.Parse(id)));
-               // var dd = SearchForName();//.ForEach(x => Debug.WriteLine(x.Name));
+                // var dd = SearchForName();//.ForEach(x => Debug.WriteLine(x.Name));
                 //Debug.WriteLine("------------------------------");
-                SearchForName();
+                //SearchForName("Anna");
             }
         }
 
@@ -191,14 +195,8 @@ namespace MapdrawingTest
 
         private static void UpdateDatabase(StaticMapData staticMapData)
         {
-            using (var context = new PersonContext())
+            using (var context = new InformationContext())
             {
-                //UrlData urlData = context.UrlDataRecords.Where(u => u.UrlIndex == staticMapData.UrlIndex 
-                //    && u.PageNumber == staticMapData.PageNumber).FirstOrDefault();
-
-                //staticMapData.SetUrlData(urlData);
-
-
                 Postal postal = context.Postals.Where(x =>
                     x.PostalCode == staticMapData.PostalCode &&
                     x.City == staticMapData.City).FirstOrDefault();
@@ -216,7 +214,7 @@ namespace MapdrawingTest
 
                 if (address == null)
                 {
-                    postal.Addresses.Add(staticMapData.GetAddress(postal.PostalId, postal));
+                    postal.Addresses.Add(staticMapData.GetAddress(postal));
                     context.SaveChanges();
                     return;
                 }
@@ -226,11 +224,9 @@ namespace MapdrawingTest
 
                 if (person == null)
                 {
-                    address.Persons.Add(staticMapData.GetPerson(address.AddressId, address));
+                    address.Persons.Add(staticMapData.GetPerson(address));
                     context.SaveChanges();
                 }
-
-
             }
         }
 
@@ -239,7 +235,8 @@ namespace MapdrawingTest
             Dispatcher.Invoke(() =>
             {
                 staticMapDataQueue.Enqueue(staticMapData);
-                staticMapListbox.InvalidateArrange();
+
+                searchListbox.InvalidateArrange();
 
                 if (staticMapDataQueue.Count > 10)
                 {
@@ -247,6 +244,7 @@ namespace MapdrawingTest
                 }
 
                 staticMapListbox.Items.Refresh();
+
             });
         }
 
@@ -273,72 +271,60 @@ namespace MapdrawingTest
         {
             new Thread(() => WebScraping()).Start();
             populationenRendering.StartRendering();
-            /* this.Dispatcher.Invoke((Action)(() =>
-             {
-                
-             }));*/
-            //    populationenRendering.StartRendering();
-            //    //Task.Factory.StartNew
-            //    new Thread(() =>
-            //    {
-            //        for (int i = 0; i < 100000; i++)
-            //        {
-            //            double x = r.Next(11113056, 24150556) / 1000000.0;
-            //            double y = r.Next(55336944, 69060000) / 1000000.0;
-            //            populationenRendering.AddCoordinate(new Point(x, y));
-            //            Thread.Sleep(100);
-            //        }
-            //    }).Start();
         }
 
-
-        private void SearchForName()
+        /// <summary>
+        /// http://blogs.msdn.com/b/adonet/archive/2011/01/31/using-dbcontext-in-ef-feature-ctp5-part-6-loading-related-entities.aspx
+        /// </summary>
+        private void SearchForName(string name)
         {
-            //List<StaticMapData>
-            string value = "Anna";
-            value = value.ToLower();
-            Match match = Regex.Match(value, ".+" + value + ".+");
-            Regex regex = new Regex(".+Anna.+");
-            StaticMapData s;
+            name = name.ToLower();
             List<Person> persons;
-            List<Address> addresses;
-            using (var context = new PersonContext())
+
+            using (var context = new InformationContext())
             {
-                persons = context.Persons.Where(x => x.Name.Contains("Anna")).ToList<Person>();//regex.IsMatch(x.Name));
-                //addresses = context.Addresses.Where(a => a.AddressId == Xxxx.First().AddressId).ToList();
+                persons = context.Persons.Where(p => p.Name.ToLower().Contains(name))
+                    .DefaultIfEmpty()
+                    .Include(p => p.Address)
+                    .Include(p => p.Address.Postal)
+                    .ToList();
             }
-            List<int> myint = persons.Select(m => m.AddressId).ToList();
-            using (var context = new PersonContext())
-            {
-                //var Xxxx = context.Persons.Where(x => x.Name.Contains("Anna")).ToList<Person>();//regex.IsMatch(x.Name));
-                addresses = context.Addresses.Where(a => myint.Any(x => x == a.AddressId)).ToList<Address>();
-            }
-            //entity framework threw an exception of type 'System.ObjectDisposedException'
+            searchList.Clear();
+            if (persons != null)
+                searchList.AddRange(persons.Select(p => new StaticMapData(p)).Take(15).ToList());
+
+//            List overPaidEmployees = Employee.Find(e => e.Salary >= 100000)
+//.OrderBy(e => e.Name)
+//.Take(3)
+//.ToList();
+
+            searchList.ForEach(x => Debug.WriteLine(x.Name));
+
+
+
+
             //The ObjectContext instance has been disposed and can no longer be used for operations that require a connection System.InvalidOperationException {System.ObjectDisposedException}
             //http://blogs.msdn.com/b/adonet/archive/2011/01/31/using-dbcontext-in-ef-feature-ctp5-part-6-loading-related-entities.aspx
-            Debug.WriteLine("addresses.FirstOrDefault().Street");
-
+            // Debug.WriteLine("addresses.FirstOrDefault().Street");
         }
 
-        //private async Task<Person> SearchForNamex()
-        //{
-        //    //List<StaticMapData>
-        //    string value = "Anna";
-        //    value = value.ToLower();
-        //    Match match = Regex.Match(value, ".+" + value + ".+");
-        //    Regex regex = new Regex(".+Anna.+");
-        //    StaticMapData s;
-        //    List<Person> persons;
-        //    List<Address> addresses;
-        //    using (var context = new PersonContext())
-        //    {
-        //       var Xxxx = await (context.Persons.Where(x => x.Name.Contains("Anna")).ToListAsync<Person>());//regex.IsMatch(x.Name));
-        //       //addresses = context.Addresses.Where(a => a.AddressId == Xxxx.First().AddressId).ToList();
-        //    }
+        private void searchTextBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            SearchForName(searchTextBox.Text);
+            searchListbox.InvalidateArrange();
+            searchListbox.Items.Refresh();
+        }
 
-        //    Debug.WriteLine("addresses.FirstOrDefault().Street");
+        private void mainWindow_Initialized(object sender, EventArgs e)
+        {
+            staticMapDataQueue = new Queue<StaticMapData>();
+            //staticMapDataQueue.Enqueue(new StaticMapData());
 
-        //    return null;
-        //}
+            staticMapListbox.ItemsSource = staticMapDataQueue;
+            //staticMapListbox.ItemsSource = staticMapDataQueue;
+            // staticMapListbox.ItemsSource = new List<StaticMapData>();
+            searchList = new List<StaticMapData>();
+            searchListbox.ItemsSource = searchList;
+        }
     }
 }
