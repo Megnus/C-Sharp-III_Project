@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace MapdrawingTest
 {
@@ -39,8 +40,10 @@ namespace MapdrawingTest
         // private List<Data.Person> listboxData;
         //private List<StaticMapData> staticMapDataList;
         private Queue<StaticMapData> staticMapDataQueue;
-        private List<StaticMapData> searchList;
+        //private List<StaticMapData> searchList;
+        private ConcurrentQueue<StaticMapData> searchConcurrentQueue;
         private InformationContext datab;
+        private Queue<StaticMapData> searchLQueue = new Queue<StaticMapData>();
 
         public MainWindow()
         {
@@ -236,7 +239,7 @@ namespace MapdrawingTest
             {
                 staticMapDataQueue.Enqueue(staticMapData);
 
-                searchListbox.InvalidateArrange();
+                //searchListbox.InvalidateArrange();
 
                 if (staticMapDataQueue.Count > 10)
                 {
@@ -278,29 +281,41 @@ namespace MapdrawingTest
         /// </summary>
         private void SearchForName(string name)
         {
-            name = name.ToLower();
-            List<Person> persons;
+           // Task.Run(() =>
+          //  {
+                name = name.ToLower();
+                List<Person> persons;
 
-            using (var context = new InformationContext())
-            {
-                persons = context.Persons.Where(p => p.Name.ToLower().Contains(name))
-                    .DefaultIfEmpty()
-                    .Include(p => p.Address)
-                    .Include(p => p.Address.Postal)
-                    .ToList();
-            }
-            searchList.Clear();
-            if (persons != null)
-                searchList.AddRange(persons.Select(p => new StaticMapData(p)).Take(15).ToList());
+                using (var context = new InformationContext())
+                {
+                    persons = context.Persons.Where(p => p.Name.ToLower().Contains(name))
+                        .DefaultIfEmpty()
+                        .Include(p => p.Address)
+                        .Include(p => p.Address.Postal)
+                        .ToList();
+                }
+                //searchList.Clear();
+                if (persons != null)
+                    persons.ForEach(p => searchConcurrentQueue.Enqueue(new StaticMapData(p)));
 
+
+                StaticMapData pr = new StaticMapData();
+
+                bool v = searchConcurrentQueue.TryPeek(out pr);
+                //if (persons != null)
+                //    searchList.AddRange(persons.Select(p => new StaticMapData(p)).Take(15).ToList());
+                Debug.WriteLine(pr.Name);
+
+          //  });
 //            List overPaidEmployees = Employee.Find(e => e.Salary >= 100000)
 //.OrderBy(e => e.Name)
 //.Take(3)
 //.ToList();
 
-            searchList.ForEach(x => Debug.WriteLine(x.Name));
+           // searchList.ForEach(x => Debug.WriteLine(x.Name));
 
-
+            searchListbox.InvalidateArrange();
+            searchListbox.Items.Refresh();
 
 
             //The ObjectContext instance has been disposed and can no longer be used for operations that require a connection System.InvalidOperationException {System.ObjectDisposedException}
@@ -323,8 +338,20 @@ namespace MapdrawingTest
             staticMapListbox.ItemsSource = staticMapDataQueue;
             //staticMapListbox.ItemsSource = staticMapDataQueue;
             // staticMapListbox.ItemsSource = new List<StaticMapData>();
-            searchList = new List<StaticMapData>();
-            searchListbox.ItemsSource = searchList;
+
+            searchLQueue = new Queue<StaticMapData>();
+            searchConcurrentQueue = new ConcurrentQueue<StaticMapData>();
+            searchConcurrentQueue.Enqueue(new StaticMapData() { Name = "mag nus" });
+
+            searchListbox.ItemsSource = searchLQueue;
+            searchListbox.InvalidateArrange();
+            searchListbox.Items.Refresh();
+
+            //Task.Run(() => { 
+            //    foreach() {
+
+            //    }
+            //});
         }
     }
 }
