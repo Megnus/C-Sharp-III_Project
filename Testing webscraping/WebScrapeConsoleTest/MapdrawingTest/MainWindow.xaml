@@ -18,40 +18,40 @@
         <TabControl Margin="385,8,10,22">
             <TabItem Header="Webscaping progress" >
                 <Grid>
-                <ListBox Name="staticMapListbox" HorizontalContentAlignment="Stretch" Margin="16,122,11,12" RenderTransformOrigin="0.5,0.5" FontSize="9">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="0,2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60" />
-                                    <ColumnDefinition Width="140" />
-                                    <ColumnDefinition Width="80" />
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition Width="100" />
-                                    <ColumnDefinition Width="100" />
-                                    <ColumnDefinition Width="100" />
-                                    <ColumnDefinition Width="60" />
-                                    <ColumnDefinition Width="80" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Id}" />
-                                <TextBlock Grid.Column="1" Text="{Binding Name}" />
-                                <TextBlock Grid.Column="2" Text="{Binding Phone}" />
-                                <TextBlock Grid.Column="3" Text="{Binding Birthday}" />
-                                <TextBlock Grid.Column="4" Text="{Binding Addr1}" />
-                                <TextBlock Grid.Column="5" Text="{Binding CoordX}" />
-                                <TextBlock Grid.Column="6" Text="{Binding CoordY}" />
-                                <TextBlock Grid.Column="7" Text="{Binding PostalCode}" />
-                                <TextBlock Grid.Column="8" Text="{Binding City}" />
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                    
-                </ListBox>
+                    <ListBox Name="staticMapListbox" HorizontalContentAlignment="Stretch" Margin="16,122,11,12" RenderTransformOrigin="0.5,0.5" FontSize="9">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition Width="140" />
+                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="70" />
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition Width="80" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Id}" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" />
+                                    <TextBlock Grid.Column="2" Text="{Binding Phone}" />
+                                    <TextBlock Grid.Column="3" Text="{Binding Birthday}" />
+                                    <TextBlock Grid.Column="4" Text="{Binding Addr1}" />
+                                    <TextBlock Grid.Column="5" Text="{Binding CoordX}" />
+                                    <TextBlock Grid.Column="6" Text="{Binding CoordY}" />
+                                    <TextBlock Grid.Column="7" Text="{Binding PostalCode}" />
+                                    <TextBlock Grid.Column="8" Text="{Binding City}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+
+                    </ListBox>
                 </Grid>
             </TabItem>
             <TabItem Header="Address search" >
                 <Grid>
-                    <TextBox Name="searchTextBox" HorizontalAlignment="Left" Height="23" Margin="37,68,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" KeyUp="searchTextBox_KeyUp"/>
+                    <TextBox Name="searchTextBox" HorizontalAlignment="Left" Height="23" Margin="37,68,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250"/>
 
                     <ListBox Name="searchListbox" HorizontalContentAlignment="Stretch" Margin="16,158,11,12" RenderTransformOrigin="0.5,0.5" FontSize="9">
                         <ListBox.ItemTemplate>
@@ -81,6 +81,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
+                    <Button x:Name="searchButton" Content="Search address" HorizontalAlignment="Left" Margin="370,68,0,0" VerticalAlignment="Top" Width="93" Click="Button_Click" Height="23"/>
                 </Grid>
             </TabItem>
         </TabControl>

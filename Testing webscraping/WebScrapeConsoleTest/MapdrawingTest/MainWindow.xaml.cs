@@ -279,16 +279,41 @@ namespace MapdrawingTest
         /// <summary>
         /// http://blogs.msdn.com/b/adonet/archive/2011/01/31/using-dbcontext-in-ef-feature-ctp5-part-6-loading-related-entities.aspx
         /// </summary>
-        private void SearchForName(string name)
+        private void SearchForName()
         {
-           // Task.Run(() =>
-          //  {
-                name = name.ToLower();
+            //string name = "";
+            //bool flagger = false;
+            //flagger = name == searchTextBox.Text.ToLower();
+            string name = searchTextBox.Text.ToLower();
+            
+            Task.Run(() =>
+            {
+                searchButton.IsEnabled = false;
+                //while (true)
+                //{
+
+                //    Dispatcher.Invoke(() =>
+                //    {
+
+                //    });
+
+                //if (flagger)
+                //{
+                //    Thread.Sleep(100);
+                //    continue;
+                //}
+                
                 List<Person> persons;
+
+                //while (searchConcurrentQueue.Count > 0)
+                //{
+                //    Thread.Sleep(100);
+                //}
 
                 using (var context = new InformationContext())
                 {
                     persons = context.Persons.Where(p => p.Name.ToLower().Contains(name))
+                        .Take(1000)
                         .DefaultIfEmpty()
                         .Include(p => p.Address)
                         .Include(p => p.Address.Postal)
@@ -296,28 +321,54 @@ namespace MapdrawingTest
                 }
                 //searchList.Clear();
                 if (persons != null)
-                    persons.ForEach(p => searchConcurrentQueue.Enqueue(new StaticMapData(p)));
+                {
+                    Dispatcher.Invoke(() =>
+                        {
+                            searchLQueue.Clear();
+                            searchListbox.Items.Refresh();
+                        });
 
+                    persons.ForEach(p => {
+                        Thread.Sleep(100);
+                        
+                        Dispatcher.Invoke(() =>
+                        {
+                            searchLQueue.Enqueue(new StaticMapData(p));
+                            searchListbox.Items.Refresh();
+                        });
+                    });
 
-                StaticMapData pr = new StaticMapData();
+                   // persons.ForEach(p => searchConcurrentQueue.Enqueue(new StaticMapData(p)));
+                    // flag = false;
+                }
+                
+                foreach (StaticMapData s in searchConcurrentQueue)
+                {
+                    Debug.WriteLine(s.Name);
+                }
+                Debug.WriteLine("--------------------------");
+                //StaticMapData pr = new StaticMapData();
 
-                bool v = searchConcurrentQueue.TryPeek(out pr);
+                //bool v = searchConcurrentQueue.TryPeek(out pr);
                 //if (persons != null)
                 //    searchList.AddRange(persons.Select(p => new StaticMapData(p)).Take(15).ToList());
-                Debug.WriteLine(pr.Name);
+                //Debug.WriteLine(pr.Name);
 
-          //  });
-//            List overPaidEmployees = Employee.Find(e => e.Salary >= 100000)
-//.OrderBy(e => e.Name)
-//.Take(3)
-//.ToList();
+                //}
+                searchButton.IsEnabled = true;
 
-           // searchList.ForEach(x => Debug.WriteLine(x.Name));
+            });
+            //            List overPaidEmployees = Employee.Find(e => e.Salary >= 100000)
+            //.OrderBy(e => e.Name)
+            //.Take(3)
+            //.ToList();
 
-            searchListbox.InvalidateArrange();
-            searchListbox.Items.Refresh();
+            // searchList.ForEach(x => Debug.WriteLine(x.Name));
 
+            //searchListbox.InvalidateArrange();
+            //searchListbox.Items.Refresh();
 
+            searchButton.IsEnabled = true;
             //The ObjectContext instance has been disposed and can no longer be used for operations that require a connection System.InvalidOperationException {System.ObjectDisposedException}
             //http://blogs.msdn.com/b/adonet/archive/2011/01/31/using-dbcontext-in-ef-feature-ctp5-part-6-loading-related-entities.aspx
             // Debug.WriteLine("addresses.FirstOrDefault().Street");
@@ -325,9 +376,54 @@ namespace MapdrawingTest
 
         private void searchTextBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            SearchForName(searchTextBox.Text);
-            searchListbox.InvalidateArrange();
-            searchListbox.Items.Refresh();
+            //SearchForName(searchTextBox.Text);
+            //searchListbox.InvalidateArrange();
+            //searchListbox.Items.Refresh();
+        }
+
+        bool flag = true;
+
+        private void transport()
+        {
+            StaticMapData sm;
+
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    if (flag)
+                    {
+                        Thread.Sleep(100);
+                        continue;
+                    }
+
+                    flag = true;
+                    searchLQueue.Clear();
+                    while (!searchConcurrentQueue.IsEmpty && flag)
+                    {
+                        searchConcurrentQueue.TryDequeue(out sm);
+                        Thread.Sleep(10);
+                        Dispatcher.Invoke(() =>
+                        {
+                            searchLQueue.Enqueue(sm);
+                            searchListbox.Items.Refresh();
+                        });
+
+
+                    }
+
+                    //while (searchLQueue.Count > 0)
+                    //{
+                    //    Thread.Sleep(1);
+                    //    searchLQueue.Dequeue();
+                    //}
+
+                    //Dispatcher.Invoke(() =>
+                    //{
+                    //    searchListbox.Items.Refresh();
+                    //});
+                }
+            });
         }
 
         private void mainWindow_Initialized(object sender, EventArgs e)
@@ -341,17 +437,25 @@ namespace MapdrawingTest
 
             searchLQueue = new Queue<StaticMapData>();
             searchConcurrentQueue = new ConcurrentQueue<StaticMapData>();
-            searchConcurrentQueue.Enqueue(new StaticMapData() { Name = "mag nus" });
+            //searchConcurrentQueue.Enqueue(new StaticMapData() { Name = "magnus" });
 
             searchListbox.ItemsSource = searchLQueue;
             searchListbox.InvalidateArrange();
             searchListbox.Items.Refresh();
 
+    //        transport();
+            //SearchForName();
             //Task.Run(() => { 
             //    foreach() {
 
             //    }
             //});
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+            SearchForName();
         }
     }
 }
