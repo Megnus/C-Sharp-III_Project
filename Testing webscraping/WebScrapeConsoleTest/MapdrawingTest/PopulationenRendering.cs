@@ -13,13 +13,16 @@ using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Windows.Shapes;
+using System.Windows.Interop;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace MapdrawingTest
 {
     public class PopulationenRendering
     {
-        WriteableBitmap writeableBitmap;
-        System.Windows.Controls.Image i;
+        private WriteableBitmap writeableBitmap;
+        System.Windows.Controls.Image img;
         private static double north = 69.06;
         private static double south = 55.336944;
         private static double east = 24.150556;
@@ -27,6 +30,7 @@ namespace MapdrawingTest
         private ConcurrentQueue<System.Windows.Point> cq;
         private bool enableRendering;
         private Viewbox viewBox;
+        private System.Drawing.Color pixelColor;
 
         private CrossHair crossHair;
 
@@ -53,7 +57,7 @@ namespace MapdrawingTest
                     {
                         cq.TryDequeue(out p);
                         Render(p.X, p.Y);
-                        Thread.Sleep(0);
+                        Thread.Sleep(100);
                     }
                     else
                     {
@@ -61,7 +65,6 @@ namespace MapdrawingTest
                     }
                 }
             }).Start();
-            
         }
 
         private System.Drawing.Point TransForm(System.Windows.Point point)
@@ -75,47 +78,106 @@ namespace MapdrawingTest
         public void Render(double x, double y)
         {
             System.Drawing.Point point = TransForm(new System.Windows.Point(x, y));
-            Application.Current.Dispatcher.Invoke(() => SetPixel(point.X, point.Y, writeableBitmap, crossHair));
+            Application.Current.Dispatcher.Invoke(() => SetPixel(point.X, point.Y, writeableBitmap, crossHair, pixelColor));
         }
 
-        public PopulationenRendering(System.Windows.Controls.Image image, Viewbox viewBox, Canvas canvas)
+        // MapdrawingTest.Properties.Resources.sweden_map
+        public void LoadBitmap(Bitmap bitmapResource)
         {
-            i = image;
-            BitmapImage bitmap = null;
-            try
-            {
-                bitmap = new BitmapImage(new Uri("C:\\Users\\Magnus\\Dropbox\\Kurser\\Programmering med C# III\\C-Sharp-III_Project\\Testing webscraping\\WebScrapeConsoleTest\\WebScrapeConsoleTest\\sweden-map.bmp", UriKind.Absolute));
-            }
-            catch
-            {
-                bitmap = new BitmapImage(new Uri("C:\\Users\\msundstr\\Pictures\\sweden-map.bmp", UriKind.Absolute));
-            }
+            BitmapImage bitmapImage = null;
+            Bitmap bitmap = null;
+            // bitmap = new BitmapImage(new Uri("C:\\Users\\Magnus\\Dropbox\\Kurser\\Programmering med C# III\\C-Sharp-III_Project\\Testing webscraping\\WebScrapeConsoleTest\\WebScrapeConsoleTest\\sweden-map.bmp", UriKind.Absolute));
+            // bitmap = new BitmapImage(new Uri("C:\\Users\\msundstr\\Pictures\\sweden-map.bmp", UriKind.Absolute));
+            bitmap = new Bitmap(bitmapResource);
+            bitmapImage = ToBitmapImage(bitmap);
+            writeableBitmap = new WriteableBitmap(bitmapImage);
+        }
 
-            writeableBitmap = new WriteableBitmap(bitmap);
-            i.Source = writeableBitmap;
-            i.Stretch = Stretch.None;
-            i.HorizontalAlignment = HorizontalAlignment.Left;
-            i.VerticalAlignment = VerticalAlignment.Top;
+        private BitmapImage ToBitmapImage(Bitmap bitmap)
+        {
+            using (var memory = new MemoryStream())
+            {
+                bitmap.Save(memory, ImageFormat.Png);
+                memory.Position = 0;
+
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memory;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+
+                return bitmapImage;
+            }
+        }
+
+        public PopulationenRendering(System.Windows.Controls.Image image, Viewbox viewBox, Canvas canvas, System.Drawing.Color pixelColor) : 
+        {
+
+        }
+
+        public PopulationenRendering(System.Windows.Controls.Image image, Viewbox viewBox, Canvas canvas, System.Drawing.Color pixelColor)
+        {
+            //BitmapImage bitmap = null;
+            //Bitmap bitmap_ = null;
+            //// bitmap = new BitmapImage(new Uri("C:\\Users\\Magnus\\Dropbox\\Kurser\\Programmering med C# III\\C-Sharp-III_Project\\Testing webscraping\\WebScrapeConsoleTest\\WebScrapeConsoleTest\\sweden-map.bmp", UriKind.Absolute));
+            //// bitmap = new BitmapImage(new Uri("C:\\Users\\msundstr\\Pictures\\sweden-map.bmp", UriKind.Absolute));
+            //bitmap_ = new Bitmap(MapdrawingTest.Properties.Resources.sweden_map);
+            //bitmap = ToBitmapImage(bitmap_);
+            //writeableBitmap = new WriteableBitmap(bitmap);
+
+            img = image;
+            img.Source = writeableBitmap;
+            img.Stretch = Stretch.None;
+            img.HorizontalAlignment = HorizontalAlignment.Left;
+            img.VerticalAlignment = VerticalAlignment.Top;
             cq = new ConcurrentQueue<System.Windows.Point>();
             this.viewBox = viewBox;
-            this.crossHair = new CrossHair(canvas); ;
+            this.crossHair = new CrossHair(canvas);
+            this.pixelColor = pixelColor;
         }
 
-        Action<int, int, WriteableBitmap, CrossHair> SetPixel = (x, y, wbm, ch) =>
+        public void ClearAll()
+        {
+            int w = writeableBitmap.PixelWidth;
+            int h = writeableBitmap.PixelHeight;
+            int[] pixelData = new int[w * h];
+            int widthInBytes = 4 * w;
+            writeableBitmap.CopyPixels(pixelData, widthInBytes, 0);
+            Array.Clear(pixelData, 0, w * h);
+            //for (int i = 0; i < pixelData.Length; ++i)
+            //{
+            //    pixelData[i] ^= 0x00ffffff;
+            //}
+            writeableBitmap.WritePixels(new Int32Rect(0, 0, w, h), pixelData, widthInBytes, 0);
+        }
+
+        Action<int, int, WriteableBitmap, CrossHair, System.Drawing.Color> SetPixel = (x, y, wbm, ch, color) =>
         {
             wbm.Lock();
             var bmp = new System.Drawing.Bitmap(300, 704,
                                      wbm.BackBufferStride,
                                      System.Drawing.Imaging.PixelFormat.Format32bppPArgb,
                                      wbm.BackBuffer);
+            bmp.SetPixel(x, y, color);
+            //bmp.SetPixel(x, y, System.Drawing.Color.Transparent);
 
-            bmp.SetPixel(x, y, System.Drawing.Color.Red);
             bmp.Dispose();
             wbm.AddDirtyRect(new Int32Rect(0, 0, 300, 680));
             wbm.Unlock();
             ch.SetPosition(new System.Windows.Point(x, y));
-
         };
+
+        public void SetCrossHairPosition(int x, int y)
+        {
+            this.crossHair.SetPosition(new System.Windows.Point(x, y));
+        }
+
+        public void SetCrossHairVisibility(bool visible)
+        {
+            this.crossHair.SetVisibility(visible);
+        }
+
+        //public void 
     }
 
     public class CrossHair
@@ -134,8 +196,6 @@ namespace MapdrawingTest
             firstLine.Stroke = System.Windows.Media.Brushes.Black;
             secondLine.Stroke = System.Windows.Media.Brushes.Black;
 
-           
-
             firstLine.HorizontalAlignment = HorizontalAlignment.Left;
             firstLine.VerticalAlignment = VerticalAlignment.Center;
             firstLine.StrokeThickness = 1;
@@ -149,12 +209,8 @@ namespace MapdrawingTest
             secondLine.VerticalAlignment = VerticalAlignment.Center;
             secondLine.StrokeThickness = 1;
 
-           
-
             canvas.Children.Add(firstLine);
             canvas.Children.Add(secondLine);
-   
-
 
             //this.canvas = canvas;
 
@@ -224,6 +280,12 @@ namespace MapdrawingTest
             //double left = point.X - (16 / 2);
             //double top = point.Y - (16 / 2);
             //ellipse.Margin = new Thickness(left, top, 0, 0);
+        }
+
+        public void SetVisibility(bool visible)
+        {
+            firstLine.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
+            secondLine.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
         }
     }
 }

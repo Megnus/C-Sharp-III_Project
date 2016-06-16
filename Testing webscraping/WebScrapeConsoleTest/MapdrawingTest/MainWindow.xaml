@@ -5,15 +5,21 @@
     <Grid Name="myGrid">
 
         <Image x:Name="mapImage" HorizontalAlignment="Left" Height="704" VerticalAlignment="Top" Width="300" Margin="10,10,10,10" />
+        <Image x:Name="mapImage_Copy" HorizontalAlignment="Left" Height="704" VerticalAlignment="Top" Width="300" Margin="217,8,0,0" />
         <Viewbox x:Name="vbab" Margin="0,0,291,700" Width="20" Height="20" >
             <Grid>
-                <Ellipse Height="100" Width="100" StrokeThickness="2" Stroke="Black"/>
+                <Ellipse Height="100" Width="100" StrokeThickness="2" Stroke="Black">
+                    <Ellipse.Fill>
+                        <ImageBrush/>
+                    </Ellipse.Fill>
+                </Ellipse>
                 <Line  X1="15" Y1="15" X2="85" Y2="85" Stroke="Black" StrokeThickness="1" />
                 <Line  X1="15" Y1="85" X2="85" Y2="15" Stroke="Black" StrokeThickness="1" Panel.ZIndex="100" />
             </Grid>
         </Viewbox>
         <Button Content="Button" HorizontalAlignment="Left" Margin="243,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
         <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="704" VerticalAlignment="Top" Width="300" Margin="10,10,10,10"/>
+        <Canvas x:Name="canvas_Copy" HorizontalAlignment="Left" Height="704" VerticalAlignment="Top" Width="300" Margin="217,8,0,0"/>
 
         <TabControl Margin="385,8,10,22">
             <TabItem Header="Webscaping progress" >
@@ -49,7 +55,7 @@
                     </ListBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Address search" >
+            <TabItem Header="Address search" GotFocus="TabItem_GotFocus" >
                 <Grid>
                     <TextBox Name="searchTextBox" HorizontalAlignment="Left" Height="23" Margin="37,68,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250"/>
 
@@ -85,10 +91,5 @@
                 </Grid>
             </TabItem>
         </TabControl>
-
-
-
-
-
     </Grid>
 </Window>

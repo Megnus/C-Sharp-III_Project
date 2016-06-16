@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MapdrawingTest.Data
@@ -111,7 +112,7 @@ namespace MapdrawingTest.Data
                 UrlIndex = this.UrlIndex,
                 PageNumber = this.PageNumber,
                 Name = this.Name,
-                Phone = this.Phone,
+                Phone = Regex.Replace(this.Phone, @"(-|\s)+", ""),
                 BirthDate = this.Birthday,
                 Address = address
             };
