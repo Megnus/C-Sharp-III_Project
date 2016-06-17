@@ -26,6 +26,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
+//using System.Drawing;
 
 namespace MapdrawingTest
 {
@@ -51,8 +52,9 @@ namespace MapdrawingTest
         public MainWindow()
         {
             InitializeComponent();
-            populationenRendering = new PopulationenRendering(mapImage, vbab, canvas, System.Drawing.Color.Red);
-            populationenRendering_Copy = new PopulationenRendering(mapImage_Copy, vbab, canvas_Copy, System.Drawing.Color.Blue);
+            Bitmap bitmap = MapdrawingTest.Properties.Resources.sweden_map;
+            populationenRendering = new PopulationenRendering(mapImage, canvas, System.Drawing.Color.Red, bitmap);
+            populationenRendering_Copy = new PopulationenRendering(mapImage_Copy, canvas_Copy, System.Drawing.Color.Blue, bitmap.Width, bitmap.Height);
         }
 
         private void WebScraping()

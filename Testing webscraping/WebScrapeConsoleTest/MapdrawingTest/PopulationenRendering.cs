@@ -110,30 +110,22 @@ namespace MapdrawingTest
             }
         }
 
-        public PopulationenRendering(System.Windows.Controls.Image image, Viewbox viewBox, Canvas canvas, System.Drawing.Color pixelColor) : 
+        public PopulationenRendering(System.Windows.Controls.Image image, Canvas canvas, System.Drawing.Color pixelColor, int width, int height) :
+            this(image, canvas, pixelColor, new Bitmap(width, height)) { }
+
+        public PopulationenRendering(System.Windows.Controls.Image image, Canvas canvas, System.Drawing.Color pixelColor, Bitmap bitmap)
         {
-
-        }
-
-        public PopulationenRendering(System.Windows.Controls.Image image, Viewbox viewBox, Canvas canvas, System.Drawing.Color pixelColor)
-        {
-            //BitmapImage bitmap = null;
-            //Bitmap bitmap_ = null;
-            //// bitmap = new BitmapImage(new Uri("C:\\Users\\Magnus\\Dropbox\\Kurser\\Programmering med C# III\\C-Sharp-III_Project\\Testing webscraping\\WebScrapeConsoleTest\\WebScrapeConsoleTest\\sweden-map.bmp", UriKind.Absolute));
-            //// bitmap = new BitmapImage(new Uri("C:\\Users\\msundstr\\Pictures\\sweden-map.bmp", UriKind.Absolute));
-            //bitmap_ = new Bitmap(MapdrawingTest.Properties.Resources.sweden_map);
-            //bitmap = ToBitmapImage(bitmap_);
-            //writeableBitmap = new WriteableBitmap(bitmap);
-
+            Bitmap flag = new Bitmap(bitmap.Width, bitmap.Height);
+            LoadBitmap(flag);
             img = image;
             img.Source = writeableBitmap;
             img.Stretch = Stretch.None;
             img.HorizontalAlignment = HorizontalAlignment.Left;
             img.VerticalAlignment = VerticalAlignment.Top;
             cq = new ConcurrentQueue<System.Windows.Point>();
-            this.viewBox = viewBox;
             this.crossHair = new CrossHair(canvas);
             this.pixelColor = pixelColor;
+            //Application.Current.Dispatcher.Invoke(() => { LoadBitmap(bitmap); });
         }
 
         public void ClearAll()
