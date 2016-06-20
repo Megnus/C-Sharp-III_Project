@@ -115,8 +115,8 @@ namespace MapdrawingTest
 
         public PopulationenRendering(System.Windows.Controls.Image image, Canvas canvas, System.Drawing.Color pixelColor, Bitmap bitmap)
         {
-            Bitmap flag = new Bitmap(bitmap.Width, bitmap.Height);
-            LoadBitmap(flag);
+            //Bitmap flag = new Bitmap(bitmap.Width, bitmap.Height);
+            LoadBitmap(bitmap);
             img = image;
             img.Source = writeableBitmap;
             img.Stretch = Stretch.None;
@@ -156,12 +156,16 @@ namespace MapdrawingTest
             bmp.Dispose();
             wbm.AddDirtyRect(new Int32Rect(0, 0, 300, 680));
             wbm.Unlock();
-            ch.SetPosition(new System.Windows.Point(x, y));
+            if (ch.IsVisible)
+            {
+                ch.SetPosition(new System.Windows.Point(x, y));
+            }
         };
 
-        public void SetCrossHairPosition(int x, int y)
+        public void SetCrossHairPosition(double x, double y)
         {
-            this.crossHair.SetPosition(new System.Windows.Point(x, y));
+            System.Drawing.Point point = TransForm(new System.Windows.Point(x, y));
+            this.crossHair.SetPosition(new System.Windows.Point(point.X, point.Y));
         }
 
         public void SetCrossHairVisibility(bool visible)
@@ -178,6 +182,7 @@ namespace MapdrawingTest
         private Line secondLine;
         private Ellipse ellipse;
         private Canvas canvas;
+        private bool isVisible;
 
         public CrossHair(Canvas canvas)
         {
@@ -276,8 +281,17 @@ namespace MapdrawingTest
 
         public void SetVisibility(bool visible)
         {
+            isVisible = visible;
             firstLine.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
             secondLine.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        public bool IsVisible
+        {
+            get
+            {
+                return isVisible;
+            }
         }
     }
 }

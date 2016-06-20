@@ -30,7 +30,6 @@ using System.Collections.Concurrent;
 
 namespace MapdrawingTest
 {
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -48,19 +47,32 @@ namespace MapdrawingTest
         private ConcurrentQueue<StaticMapData> searchConcurrentQueue;
         private InformationContext datab;
         private Queue<StaticMapData> searchLQueue = new Queue<StaticMapData>();
+        private PersonListInformationHandler personListInformationHandler;
+        private StaticMapDataHandler siteInformationHandler;
+        private bool runWebScraping = true;
+        private TabSelected tabSelected;
+
+        enum TabSelected
+        {
+            Webscraping,
+            Search
+        }
 
         public MainWindow()
         {
             InitializeComponent();
-            Bitmap bitmap = MapdrawingTest.Properties.Resources.sweden_map;
+            System.Drawing.Bitmap bitmap = MapdrawingTest.Properties.Resources.sweden_map;
             populationenRendering = new PopulationenRendering(mapImage, canvas, System.Drawing.Color.Red, bitmap);
             populationenRendering_Copy = new PopulationenRendering(mapImage_Copy, canvas_Copy, System.Drawing.Color.Blue, bitmap.Width, bitmap.Height);
+
+            this.personListInformationHandler = new PersonListInformationHandler();
+            this.siteInformationHandler = new StaticMapDataHandler();
+            this.tabSelected = TabSelected.Webscraping;
         }
 
-        private void WebScraping()
+        public void WebScraping()
         {
-            PersonListInformationHandler personListInformationHandler = new PersonListInformationHandler();
-            StaticMapDataHandler siteInformationHandler = new StaticMapDataHandler();
+            runWebScraping = true;
 
             Person person = new InformationContext()
                 .Persons.OrderByDescending(u => u.UrlIndex)
@@ -80,7 +92,7 @@ namespace MapdrawingTest
                 context.Addresses.ToList().ForEach(a => populationenRendering.AddCoordinate(new Point(a.XCoord, a.YCoord)));
             }
 
-            while (Dispatcher.Thread.IsAlive)
+            while (runWebScraping && Dispatcher.Thread.IsAlive)
             {
                 List<string> personList = personListInformationHandler.GetNextList(USER_LIST_REGEX);
                 personList.ForEach(id => HandleUserInformation(
@@ -172,9 +184,11 @@ namespace MapdrawingTest
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            new Thread(() => WebScraping()).Start();
+            Thread thread = new Thread(() => WebScraping());
+            thread.IsBackground = true;
+            thread.Start();
             populationenRendering.StartRendering();
-            populationenRendering_Copy.ClearAll();
+            populationenRendering.SetCrossHairVisibility(true);
         }
 
         /// <summary>
@@ -223,7 +237,7 @@ namespace MapdrawingTest
                             && p.Address.Street.Contains(staticMapData.Addr1)
                             && p.Address.Postal.PostalCode.Contains(staticMapData.PostalCode)
                             && p.Address.Postal.City.Contains(staticMapData.City))
-                        .Take(1000)
+                        .Take(100)
                         .DefaultIfEmpty()
                         .Include(p => p.Address)
                         .Include(p => p.Address.Postal)
@@ -260,7 +274,7 @@ namespace MapdrawingTest
 
             Task.Run(() =>
             {
-                while (true)
+                while (Dispatcher.Thread.IsAlive)
                 {
                     if (flag)
                     {
@@ -297,12 +311,63 @@ namespace MapdrawingTest
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            populationenRendering_Copy.ClearAll();
             SearchForName();
         }
 
         private void TabItem_GotFocus(object sender, RoutedEventArgs e)
         {
-            System.Windows.MessageBox.Show("Selected!!!");
+            //System.Windows.MessageBox.Show(sender.ToString());
+            if (sender.Equals(searchTab))
+            {
+                tabSelected = TabSelected.Search;
+                populationenRendering.SetCrossHairVisibility(false);
+                populationenRendering_Copy.SetCrossHairVisibility(false);
+            }
+            else if (sender.Equals(webscrapingTab))
+            {
+                tabSelected = TabSelected.Webscraping;
+                populationenRendering.SetCrossHairVisibility(true);
+                populationenRendering_Copy.SetCrossHairVisibility(false);
+            }
+        }
+
+        private void searchListbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (searchListbox.Items.Count > 0)
+            {
+                populationenRendering_Copy.SetCrossHairVisibility(true);
+                StaticMapData s = (StaticMapData)searchListbox.SelectedItem;
+                if (s != null)
+                {
+                    double x = double.Parse(s.CoordX);
+                    double y = double.Parse(s.CoordY);
+                    populationenRendering_Copy.SetCrossHairPosition(x, y);
+                }
+            }
+        }
+
+        private void mainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            populationenRendering.StopRendering();
+            populationenRendering_Copy.StopRendering();
+            Environment.Exit(0);
+        }
+
+        private void MenuItem_Checked(object sender, RoutedEventArgs e)
+        {
+            Thread thread = new Thread(() => WebScraping());
+            thread.IsBackground = true;
+            thread.Start();
+            populationenRendering.SetCrossHairVisibility(tabSelected.Equals(TabSelected.Webscraping));
+            populationenRendering.StartRendering();
+        }
+
+        private void MenuItem_Unchecked(object sender, RoutedEventArgs e)
+        {
+            runWebScraping = false;
+            populationenRendering.SetCrossHairVisibility(true);
+            populationenRendering.StopRendering();
         }
     }
 }
