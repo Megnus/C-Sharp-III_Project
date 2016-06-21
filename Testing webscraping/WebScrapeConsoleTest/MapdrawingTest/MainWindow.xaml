@@ -47,19 +47,19 @@
                         <ListBox.Resources>
                             <Style TargetType="ListBoxItem">
                                 <Style.Resources>
-                                    
-                         <!--SelectedItem with focus--> 
-                        
+
+                                    <!--SelectedItem with focus-->
+
                                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
                        Color="Transparent" />
-                                    
-                         <!--SelectedItem without focus--> 
-                        
+
+                                    <!--SelectedItem without focus-->
+
                                     <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}"
                        Color="Transparent" />
-                                    
-                         <!--SelectedItem text foreground--> 
-                        
+
+                                    <!--SelectedItem text foreground-->
+
                                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"
                        Color="Black" />
                                 </Style.Resources>
@@ -71,8 +71,13 @@
             </TabItem>
             <TabItem x:Name="searchTab" Header="Address search" GotFocus="TabItem_GotFocus" >
                 <Grid>
-                    <TextBox Name="searchTextBox" HorizontalAlignment="Left" Height="23" Margin="37,68,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250"/>
-                    <ListBox Name="searchListbox" HorizontalContentAlignment="Stretch" Margin="0,158,0,0" RenderTransformOrigin="0.5,0.5" FontSize="9" SelectionChanged="searchListbox_SelectionChanged">
+                    <TextBox Name="txbSearchName" HorizontalAlignment="Left" Height="23" Margin="209,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" BorderBrush="#FF636060" Foreground="#FF494646"/>
+                    <TextBox Name="txbSearchPhone" HorizontalAlignment="Left" Height="23" Margin="209,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" BorderBrush="#FF636060" Foreground="#FF494646"/>
+                    <TextBox Name="txbSearchAddress" HorizontalAlignment="Left" Height="23" Margin="209,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" BorderBrush="#FF636060" Foreground="#FF494646"/>
+                    <TextBox Name="txbSearchPostalCode" HorizontalAlignment="Left" Height="23" Margin="209,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" BorderBrush="#FF636060" Foreground="#FF494646"/>
+                    <TextBox Name="txbSearchCity" HorizontalAlignment="Left" Height="23" Margin="209,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" RenderTransformOrigin="0.485,2.867" BorderBrush="#FF636060" Foreground="#FF494646"/>
+
+                    <ListBox Name="searchListbox" HorizontalContentAlignment="Stretch" Margin="0,180,0,0" RenderTransformOrigin="0.5,0.5" FontSize="9" SelectionChanged="searchListbox_SelectionChanged">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,2">
@@ -100,7 +105,16 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Button x:Name="searchButton" Content="Search address" HorizontalAlignment="Left" Margin="370,68,0,0" VerticalAlignment="Top" Width="93" Click="Button_Click" Height="23"/>
+                    <Button x:Name="searchButton" Content="Search address" HorizontalAlignment="Left" Margin="612,54,0,0" VerticalAlignment="Top" Width="114" Click="Button_Click" Height="49" BorderBrush="#FF0F0F0F">
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                                <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                                <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                                <GradientStop Color="White" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
                 </Grid>
             </TabItem>
         </TabControl>
