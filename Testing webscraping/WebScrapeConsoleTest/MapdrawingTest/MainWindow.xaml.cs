@@ -217,11 +217,11 @@ namespace MapdrawingTest
 
             StaticMapData staticMapData = new StaticMapData()
             {
-                Name = searchTextBox.Text.ToLower(),
-                Phone = "",
-                Addr1 = "",
-                PostalCode = "",
-                City = ""
+                Name = txbSearchAddress.Text.ToLower(),
+                Phone = txbSearchPhone.Text.ToLower(),
+                Addr1 = txbSearchAddress.Text.ToLower(),
+                PostalCode = txbSearchPostalCode.Text.ToLower(),
+                City = txbSearchCity.Text.ToLower()
             };
 
             Task.Run(() =>
@@ -368,6 +368,34 @@ namespace MapdrawingTest
             runWebScraping = false;
             populationenRendering.SetCrossHairVisibility(true);
             populationenRendering.StopRendering();
+        }
+
+        private void View_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender.Equals(viewWebScraping))
+            {
+                tabSelected = TabSelected.Webscraping;
+                tabControl.SelectedItem = webscrapingTab;
+                viewSearch.IsChecked = false;
+            }
+
+            if (sender.Equals(viewSearch))
+            {
+                tabSelected = TabSelected.Search;
+                tabControl.SelectedItem = searchTab;
+                viewWebScraping.IsChecked = false;
+            }
+
+            //Thread thread = new Thread(() => WebScraping());
+            //thread.IsBackground = true;
+            //thread.Start();
+            //populationenRendering.SetCrossHairVisibility(tabSelected.Equals(TabSelected.Webscraping));
+            //populationenRendering.StartRendering();
+        }
+
+        private void View_Unchecked(object sender, RoutedEventArgs e)
+        {
+            //((System.Windows.Controls.MenuItem)sender).IsChecked = true;
         }
     }
 }
