@@ -376,14 +376,22 @@ namespace MapdrawingTest
             {
                 tabSelected = TabSelected.Webscraping;
                 tabControl.SelectedItem = webscrapingTab;
-                viewSearch.IsChecked = false;
+                //viewSearch.IsChecked = false;
+                //viewSearch.IsEnabled = true;
+                viewSearch.IsCheckable = false;
+                viewSearch.IsCheckable = true;
+                viewWebScraping.IsEnabled = false;
             }
 
             if (sender.Equals(viewSearch))
             {
                 tabSelected = TabSelected.Search;
                 tabControl.SelectedItem = searchTab;
-                viewWebScraping.IsChecked = false;
+                //viewWebScraping.IsChecked = false;
+                //viewWebScraping.IsEnabled = true;
+                viewWebScraping.IsCheckable = false;
+                viewWebScraping.IsCheckable = true;
+                viewSearch.IsEnabled = false;
             }
 
             //Thread thread = new Thread(() => WebScraping());
@@ -395,6 +403,12 @@ namespace MapdrawingTest
 
         private void View_Unchecked(object sender, RoutedEventArgs e)
         {
+            //((System.Windows.Controls.MenuItem)sender).IsChecked = true;
+            //if (viewWebScraping.IsChecked || viewWebScraping.IsChecked)
+            //{
+            //    return;
+            //}
+
             //((System.Windows.Controls.MenuItem)sender).IsChecked = true;
         }
     }
