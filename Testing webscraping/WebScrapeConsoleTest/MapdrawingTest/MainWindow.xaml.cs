@@ -372,44 +372,38 @@ namespace MapdrawingTest
 
         private void View_Checked(object sender, RoutedEventArgs e)
         {
+            if (webscrapingTab == null || webscrapingTab == null)
+            {
+                return;
+            }
+            
             if (sender.Equals(viewWebScraping))
             {
                 tabSelected = TabSelected.Webscraping;
                 tabControl.SelectedItem = webscrapingTab;
-                //viewSearch.IsChecked = false;
-                //viewSearch.IsEnabled = true;
-                viewSearch.IsCheckable = false;
-                viewSearch.IsCheckable = true;
-                viewWebScraping.IsEnabled = false;
+                enableUncheckingMenuItem = false;
+                viewSearch.IsChecked = false;
             }
 
             if (sender.Equals(viewSearch))
             {
                 tabSelected = TabSelected.Search;
                 tabControl.SelectedItem = searchTab;
-                //viewWebScraping.IsChecked = false;
-                //viewWebScraping.IsEnabled = true;
-                viewWebScraping.IsCheckable = false;
-                viewWebScraping.IsCheckable = true;
-                viewSearch.IsEnabled = false;
+                enableUncheckingMenuItem = false;
+                viewWebScraping.IsChecked = false;
             }
-
-            //Thread thread = new Thread(() => WebScraping());
-            //thread.IsBackground = true;
-            //thread.Start();
-            //populationenRendering.SetCrossHairVisibility(tabSelected.Equals(TabSelected.Webscraping));
-            //populationenRendering.StartRendering();
         }
+
+        bool enableUncheckingMenuItem = true;
 
         private void View_Unchecked(object sender, RoutedEventArgs e)
         {
-            //((System.Windows.Controls.MenuItem)sender).IsChecked = true;
-            //if (viewWebScraping.IsChecked || viewWebScraping.IsChecked)
-            //{
-            //    return;
-            //}
+            if (enableUncheckingMenuItem)
+            {
+                ((System.Windows.Controls.MenuItem)sender).IsChecked = true;
+            }
 
-            //((System.Windows.Controls.MenuItem)sender).IsChecked = true;
+            enableUncheckingMenuItem = true;
         }
     }
 }

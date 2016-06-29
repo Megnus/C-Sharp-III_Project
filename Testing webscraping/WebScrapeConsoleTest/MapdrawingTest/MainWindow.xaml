@@ -23,7 +23,7 @@
         <TabControl x:Name="tabControl" Margin="315,25,0,5" BorderBrush="{x:Null}" Background="{x:Null}">
             <TabItem x:Name="webscrapingTab" Header="Webscaping progress" GotFocus="TabItem_GotFocus">
                 <Grid Margin="0,0,-20,-12">
-                    <ListBox Name="staticMapListbox" HorizontalContentAlignment="Stretch" Margin="-10,180,0,0" RenderTransformOrigin="0.5,0.5" FontSize="9">
+                    <ListBox Name="staticMapListbox" HorizontalContentAlignment="Stretch" Margin="-10,180,0,0" RenderTransformOrigin="0.5,0.5" FontSize="9" BorderBrush="#FFE8E8E8">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,2">

@@ -61,7 +61,7 @@ namespace MapdrawingTest.Data
                 PageNumber = person.PageNumber;
                 Name = person.Name;
                 Phone = person.Phone;
-                Birthday = person.BirthDate;
+                Birthday = person.BirthDate;    
                 CoordX = person.Address.XCoord.ToString();
                 CoordY = person.Address.YCoord.ToString();
                 Addr1 = person.Address.Street;
