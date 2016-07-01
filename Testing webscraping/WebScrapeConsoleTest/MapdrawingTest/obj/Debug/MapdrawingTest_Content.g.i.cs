@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/sweden-map.bmp")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("gakuseisean-ivista-2-start-menu-search.ico")]
 
 

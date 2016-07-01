@@ -19,7 +19,7 @@ using System.Drawing.Imaging;
 
 namespace MapdrawingTest
 {
-    public class PopulationenRendering
+    public class MapRendering
     {
         private WriteableBitmap writeableBitmap;
         System.Windows.Controls.Image img;
@@ -48,7 +48,6 @@ namespace MapdrawingTest
         {
             new Thread(() =>
             {
-                Debug.WriteLine("Rendering started");
                 enableRendering = true;
                 System.Windows.Point p;
                 while (enableRendering)
@@ -110,10 +109,10 @@ namespace MapdrawingTest
             }
         }
 
-        public PopulationenRendering(System.Windows.Controls.Image image, Canvas canvas, System.Drawing.Color pixelColor, int width, int height) :
+        public MapRendering(System.Windows.Controls.Image image, Canvas canvas, System.Drawing.Color pixelColor, int width, int height) :
             this(image, canvas, pixelColor, new Bitmap(width, height)) { }
 
-        public PopulationenRendering(System.Windows.Controls.Image image, Canvas canvas, System.Drawing.Color pixelColor, Bitmap bitmap)
+        public MapRendering(System.Windows.Controls.Image image, Canvas canvas, System.Drawing.Color pixelColor, Bitmap bitmap)
         {
             //Bitmap flag = new Bitmap(bitmap.Width, bitmap.Height);
             LoadBitmap(bitmap);
@@ -151,8 +150,6 @@ namespace MapdrawingTest
                                      System.Drawing.Imaging.PixelFormat.Format32bppPArgb,
                                      wbm.BackBuffer);
             bmp.SetPixel(x, y, color);
-            //bmp.SetPixel(x, y, System.Drawing.Color.Transparent);
-
             bmp.Dispose();
             wbm.AddDirtyRect(new Int32Rect(0, 0, 300, 680));
             wbm.Unlock();
@@ -208,47 +205,6 @@ namespace MapdrawingTest
 
             canvas.Children.Add(firstLine);
             canvas.Children.Add(secondLine);
-
-            //this.canvas = canvas;
-
-            //firstLine = new Line();
-            //secondLine = new Line();
-            //firstLine.Stroke = System.Windows.Media.Brushes.Black;
-            //secondLine.Stroke = System.Windows.Media.Brushes.Black;
-
-            //firstLine.X1 = -5 + 200;
-            //firstLine.X2 = 5 + 200;
-            //firstLine.Y1 = -5 + 200;
-            //firstLine.Y2 = 5 + 200;
-
-            //secondLine.X1 = 5 + 200;
-            //secondLine.X2 = -5 + 200;
-            //secondLine.Y1 = -5 + 200;
-            //secondLine.Y2 = 5 + 200;
-
-            //firstLine.HorizontalAlignment = HorizontalAlignment.Left;
-            //firstLine.VerticalAlignment = VerticalAlignment.Center;
-            //firstLine.StrokeThickness = 1;
-            //firstLine.SnapsToDevicePixels = true;
-
-            //secondLine.HorizontalAlignment = HorizontalAlignment.Left;
-            //secondLine.VerticalAlignment = VerticalAlignment.Center;
-            //secondLine.StrokeThickness = 1;
-            //secondLine.SnapsToDevicePixels = true;
-
-            //secondLine.VerticalAlignment = VerticalAlignment.Center;
-            //secondLine.StrokeThickness = 1;
-
-            //ellipse = new Ellipse { Width = 16, Height = 16 };
-            //double left = 200 - (16 / 2);
-            //double top = 200 - (16 / 2);
-            //ellipse.Margin = new Thickness(left, top, 0, 0);
-            //ellipse.Stroke = System.Windows.Media.Brushes.Black;
-            //ellipse.SnapsToDevicePixels = true;
-
-            //canvas.Children.Add(firstLine);
-            //canvas.Children.Add(secondLine);
-            //canvas.Children.Add(ellipse);
         }
 
         public void SetPosition(System.Windows.Point point)
@@ -262,21 +218,6 @@ namespace MapdrawingTest
             secondLine.X2 = point.X;
             secondLine.Y1 = -10 + point.Y;
             secondLine.Y2 = 10 + point.Y;
-
-
-            //firstLine.X1 = -5 + point.X;
-            //firstLine.X2 = 5 + point.X;
-            //firstLine.Y1 = -5 + point.Y;
-            //firstLine.Y2 = 5 + point.Y;
-
-            //secondLine.X1 = 5 + point.X;
-            //secondLine.X2 = -5 + point.X;
-            //secondLine.Y1 = -5 + point.Y;
-            //secondLine.Y2 = 5 + point.Y;
-
-            //double left = point.X - (16 / 2);
-            //double top = point.Y - (16 / 2);
-            //ellipse.Margin = new Thickness(left, top, 0, 0);
         }
 
         public void SetVisibility(bool visible)

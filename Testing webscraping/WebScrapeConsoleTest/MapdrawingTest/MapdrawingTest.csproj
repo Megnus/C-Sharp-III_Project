@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icons\Gakuseisean-Ivista-2-Start-Menu-Search.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -68,10 +71,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\StaticMapData.cs" />
-    <Compile Include="EndlessProgressbar.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Obosolete\WriteableBitmapDemo.cs" />
     <Compile Include="Web\PersonListInformationHandler.cs" />
     <Compile Include="Web\SiteInformationHandler.cs" />
     <Compile Include="Web\WebClientHandler.cs" />
@@ -94,8 +93,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Obosolete\MapRender.cs" />
-    <Compile Include="PopulationenRendering.cs" />
+    <Compile Include="View\MapRendering.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -125,6 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\sweden-map.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Gakuseisean-Ivista-2-Start-Menu-Search.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

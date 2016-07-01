@@ -41,8 +41,8 @@ namespace MapdrawingTest
         private const string TELEPHONE_REGEX = "(?<=\"telephone\">).+?(?=</li>)";
         private const string LINEFEED_REGEX = "\n";
         //https://msdn.microsoft.com/en-us/library/system.windows.media.imaging.writeablebitmap(VS.85).aspx
-        PopulationenRendering populationenRendering;
-        PopulationenRendering populationenRendering_Copy;
+        MapRendering populationenRendering;
+        MapRendering populationenRendering_Copy;
         private Queue<StaticMapData> staticMapDataQueue;
         private ConcurrentQueue<StaticMapData> searchConcurrentQueue;
         private InformationContext datab;
@@ -62,8 +62,8 @@ namespace MapdrawingTest
         {
             InitializeComponent();
             System.Drawing.Bitmap bitmap = MapdrawingTest.Properties.Resources.sweden_map;
-            populationenRendering = new PopulationenRendering(mapImage, canvas, System.Drawing.Color.Red, bitmap);
-            populationenRendering_Copy = new PopulationenRendering(mapImage_Copy, canvas_Copy, System.Drawing.Color.Blue, bitmap.Width, bitmap.Height);
+            populationenRendering = new MapRendering(mapImage, canvas, System.Drawing.Color.Red, bitmap);
+            populationenRendering_Copy = new MapRendering(mapImage_Copy, canvas_Copy, System.Drawing.Color.Blue, bitmap.Width, bitmap.Height);
 
             this.personListInformationHandler = new PersonListInformationHandler();
             this.siteInformationHandler = new StaticMapDataHandler();

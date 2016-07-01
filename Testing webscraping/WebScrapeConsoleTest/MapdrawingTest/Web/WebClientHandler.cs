@@ -18,7 +18,7 @@ namespace MapdrawingTest.Web
         {
             using (WebClient webClient = new WebClient())
             {
-                for (int i = 0; i < 360; i++)
+                while (true)
                 {
                     try
                     {
@@ -32,8 +32,7 @@ namespace MapdrawingTest.Web
                     {
                         Thread.Sleep(10000);
                     }   
-                }
-                
+                }    
             }
         }
 
