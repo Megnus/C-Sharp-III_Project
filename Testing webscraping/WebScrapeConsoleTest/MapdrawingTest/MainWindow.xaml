@@ -17,21 +17,21 @@
         <!--<Button Content="Button" HorizontalAlignment="Left" Margin="243,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>-->
         <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="704" VerticalAlignment="Top" Width="300" Margin="10,27,10,10"/>
         <Canvas x:Name="canvas_Copy" HorizontalAlignment="Left" Height="704" VerticalAlignment="Top" Width="300" Margin="10,27,10,10">
-            <Frame Height="726" Canvas.Left="73" Width="229" BorderThickness="0,0,1,0" BorderBrush="#FFCFCDCD"/>
+            <Frame Height="726" Canvas.Left="73" Width="229" BorderThickness="0,0,1,0" BorderBrush="#FFE8E8E8" />
         </Canvas>
 
         <TabControl x:Name="tabControl" Margin="315,25,0,5" BorderBrush="{x:Null}" Background="{x:Null}">
             <TabItem x:Name="webscrapingTab" Header="Webscaping progress" GotFocus="TabItem_GotFocus">
                 <Grid Margin="0,-2,-20,-11">
-                    <Label Content="URL Id:" HorizontalAlignment="Left" Margin="41,28,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
-                    <Label Content="Id data site address:" HorizontalAlignment="Left" Margin="41,56,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
-                    <Label Content="Address data site address:" HorizontalAlignment="Left" Margin="41,84,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
-                    <Label Content="Number of address in db:" HorizontalAlignment="Left" Margin="41,117,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
-                    <Label x:Name="lblUrlId" Content="URL Id:" HorizontalAlignment="Left" Margin="207,28,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
-                    <Label x:Name="lblIdDataAddress" Content="Id data site address:" HorizontalAlignment="Left" Margin="207,56,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
-                    <Label x:Name="lblAddressData" Content="Address data site address:" HorizontalAlignment="Left" Margin="207,84,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
-                    <Label x:Name="lblNumberOfRecords" Content="Number of records in db:" HorizontalAlignment="Left" Margin="207,117,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
-                    <ProgressBar HorizontalAlignment="Left" Height="41" Margin="812,62,0,0" VerticalAlignment="Top" Width="122" RenderTransformOrigin="0.5,0.5" Orientation="Vertical">
+                    <Label Content="URL Id:" HorizontalAlignment="Left" Margin="33,16,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
+                    <Label Content="Id data site address:" HorizontalAlignment="Left" Margin="33,44,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
+                    <Label Content="Address data site address:" HorizontalAlignment="Left" Margin="33,72,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
+                    <Label Content="Number of address in db:" HorizontalAlignment="Left" Margin="33,105,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
+                    <Label x:Name="lblUrlId" Content="URL Id:" HorizontalAlignment="Left" Margin="199,16,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
+                    <Label x:Name="lblIdDataAddress" Content="Id data site address:" HorizontalAlignment="Left" Margin="199,44,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
+                    <Label x:Name="lblAddressData" Content="Address data site address:" HorizontalAlignment="Left" Margin="199,72,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
+                    <Label x:Name="lblNumberOfRecords" Content="Number of records in db:" HorizontalAlignment="Left" Margin="199,105,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28"/>
+                    <ProgressBar HorizontalAlignment="Left" Height="41" Margin="803,53,0,0" VerticalAlignment="Top" Width="101" RenderTransformOrigin="0.5,0.5" Orientation="Vertical">
                         <ProgressBar.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform/>
@@ -46,25 +46,25 @@
                             <DataTemplate>
                                 <Grid Margin="0,2">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="60" />
-                                        <ColumnDefinition Width="140" />
-                                        <ColumnDefinition Width="80" />
                                         <ColumnDefinition Width="70" />
+                                        <ColumnDefinition Width="130" />
                                         <ColumnDefinition Width="100" />
-                                        <ColumnDefinition Width="100" />
-                                        <ColumnDefinition Width="100" />
-                                        <ColumnDefinition Width="60" />
                                         <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="130" />
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="100" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Id}" />
-                                    <TextBlock Grid.Column="1" Text="{Binding Name}" />
-                                    <TextBlock Grid.Column="2" Text="{Binding Phone}" />
-                                    <TextBlock Grid.Column="3" Text="{Binding Birthday}" />
-                                    <TextBlock Grid.Column="4" Text="{Binding Addr1}" />
-                                    <TextBlock Grid.Column="5" Text="{Binding CoordX}" />
-                                    <TextBlock Grid.Column="6" Text="{Binding CoordY}" />
-                                    <TextBlock Grid.Column="7" Text="{Binding PostalCode}" />
-                                    <TextBlock Grid.Column="8" Text="{Binding City}" />
+                                    <TextBlock Grid.Column="0" Text="{Binding Id}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="2" Text="{Binding Phone}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="3" Text="{Binding Birthday}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="4" Text="{Binding Addr1}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="5" Text="{Binding CoordX}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="6" Text="{Binding CoordY}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="7" Text="{Binding PostalCode}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="8" Text="{Binding City}" HorizontalAlignment="Right" />
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -91,6 +91,15 @@
                             </Style>
                         </ListBox.Resources>
                     </ListBox>
+                    <Label Content="Id" HorizontalAlignment="Left" Margin="48,150,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Name" HorizontalAlignment="Left" Margin="156,150,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Phone" HorizontalAlignment="Left" Margin="254,150,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Birthday" HorizontalAlignment="Left" Margin="326,150,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Address" HorizontalAlignment="Left" Margin="454,150,0,0" VerticalAlignment="Top"/>
+                    <Label Content="CoordX" HorizontalAlignment="Left" Margin="556,150,0,0" VerticalAlignment="Top"/>
+                    <Label Content="CoordY" HorizontalAlignment="Left" Margin="658,150,0,0" VerticalAlignment="Top"/>
+                    <Label Content="PostalCode" HorizontalAlignment="Left" Margin="720,150,0,0" VerticalAlignment="Top"/>
+                    <Label Content="City" HorizontalAlignment="Left" Margin="858,150,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="searchTab" Header="Address search" GotFocus="TabItem_GotFocus" >
