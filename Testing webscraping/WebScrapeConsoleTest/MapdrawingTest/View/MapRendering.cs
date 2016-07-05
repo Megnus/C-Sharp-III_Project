@@ -44,6 +44,11 @@ namespace MapdrawingTest
             enableRendering = false;
         }
 
+        public int QueueCount()
+        {
+            return cq.Count;
+        }
+
         public void StartRendering()
         {
             new Thread(() =>

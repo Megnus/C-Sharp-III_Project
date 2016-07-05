@@ -90,6 +90,19 @@ namespace MapdrawingTest
             using (var context = new InformationContext())
             {
                 context.Addresses.ToList().ForEach(a => populationenRendering.AddCoordinate(new Point(a.XCoord, a.YCoord)));
+                Dispatcher.Invoke(() => { lblNumberOfRecords.Content = context.Persons.Count().ToString(); });
+
+                Task.Run(() =>
+                {
+                    Dispatcher.Invoke(() => { mapPixelProgressBar.Maximum = populationenRendering.QueueCount(); });
+                    //Debug.WriteLine(context.Persons.Count());
+                    while (populationenRendering.QueueCount() > 0)
+                    {
+                        Dispatcher.Invoke(() => mapPixelProgressBar.Value++);
+
+                        Thread.Sleep(250);
+                    }
+                });
             }
 
             while (runWebScraping && Dispatcher.Thread.IsAlive)
@@ -130,7 +143,7 @@ namespace MapdrawingTest
             }
         }
 
-        private static void UpdateDatabase(StaticMapData staticMapData)
+        private void UpdateDatabase(StaticMapData staticMapData)
         {
             using (var context = new InformationContext())
             {
@@ -163,6 +176,7 @@ namespace MapdrawingTest
                 {
                     address.Persons.Add(staticMapData.GetPerson(address));
                     context.SaveChanges();
+                    Dispatcher.Invoke(() => { lblNumberOfRecords.Content = context.Persons.Count().ToString(); });
                 }
             }
         }
@@ -184,11 +198,11 @@ namespace MapdrawingTest
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            Thread thread = new Thread(() => WebScraping());
-            thread.IsBackground = true;
-            thread.Start();
-            populationenRendering.StartRendering();
-            populationenRendering.SetCrossHairVisibility(true);
+            //Thread thread = new Thread(() => WebScraping());
+            //thread.IsBackground = true;
+            //thread.Start();
+            //populationenRendering.StartRendering();
+            //populationenRendering.SetCrossHairVisibility(true);
         }
 
         /// <summary>
@@ -266,37 +280,37 @@ namespace MapdrawingTest
             // Debug.WriteLine("addresses.FirstOrDefault().Street");
         }
 
-        bool flag = true;
+        //bool flag = true;
 
-        private void transport()
-        {
-            StaticMapData sm;
+        //private void transport()
+        //{
+        //    StaticMapData staticMapData;
 
-            Task.Run(() =>
-            {
-                while (Dispatcher.Thread.IsAlive)
-                {
-                    if (flag)
-                    {
-                        Thread.Sleep(100);
-                        continue;
-                    }
+        //    Task.Run(() =>
+        //    {
+        //        while (Dispatcher.Thread.IsAlive)
+        //        {
+        //            if (flag)
+        //            {
+        //                Thread.Sleep(100);
+        //                continue;
+        //            }
 
-                    flag = true;
-                    searchLQueue.Clear();
-                    while (!searchConcurrentQueue.IsEmpty && flag)
-                    {
-                        searchConcurrentQueue.TryDequeue(out sm);
-                        Thread.Sleep(10);
-                        Dispatcher.Invoke(() =>
-                        {
-                            searchLQueue.Enqueue(sm);
-                            searchListbox.Items.Refresh();
-                        });
-                    }
-                }
-            });
-        }
+        //            flag = true;
+        //            searchLQueue.Clear();
+        //            while (!searchConcurrentQueue.IsEmpty && flag)
+        //            {
+        //                searchConcurrentQueue.TryDequeue(out staticMapData);
+        //                Thread.Sleep(10);
+        //                Dispatcher.Invoke(() =>
+        //                {
+        //                    searchLQueue.Enqueue(staticMapData);
+        //                    searchListbox.Items.Refresh();
+        //                });
+        //            }
+        //        }
+        //    });
+        //}
 
         private void mainWindow_Initialized(object sender, EventArgs e)
         {
@@ -376,7 +390,7 @@ namespace MapdrawingTest
             {
                 return;
             }
-            
+
             if (sender.Equals(viewWebScraping))
             {
                 tabSelected = TabSelected.Webscraping;
