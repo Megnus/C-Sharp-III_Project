@@ -17,20 +17,20 @@ namespace MapdrawingTest.Web
         private string triggerString;
 
         public int PostalNumber { get; set; }
-
         public int PageNumber { get; set; }
+        public string Url { get; set; }
 
         public List<string> GetNextList(string regex)
         {
              List<String> list = new List<String>();
              do
              {
-                 string url = String.Format(URL_TEMPLATE, PostalNumber, PageNumber);
-                 WebClientHandler webClientHandler = new WebClientHandler(url);
+                 Url = String.Format(URL_TEMPLATE, PostalNumber, PageNumber);
+                 WebClientHandler webClientHandler = new WebClientHandler(Url);
                  list = webClientHandler.GetSiteContent(regex);
                  PageNumber++;
 
-                 if (list.Count <= 0 || !webClientHandler.ContainsString(url))
+                 if (list.Count <= 0 || !webClientHandler.ContainsString(Url))
                  {
                      PageNumber = 1;
                      PostalNumber++;

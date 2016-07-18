@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MapdrawingTest")]
+[assembly: AssemblyTitle("AddressCollectorApplication")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("FLIR SYSTEMS")]
-[assembly: AssemblyProduct("MapdrawingTest")]
-[assembly: AssemblyCopyright("Copyright © FLIR SYSTEMS 2016")]
+[assembly: AssemblyCompany("Magnus Data Systems")]
+[assembly: AssemblyProduct("AddressCollectorApplication")]
+[assembly: AssemblyCopyright("Copyright © Magnus Data Systems")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

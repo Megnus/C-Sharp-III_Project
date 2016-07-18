@@ -16,6 +16,8 @@ namespace MapdrawingTest.Web
         private const string TRIGGER_STRING = "staticMapData";
         private int dataId = 0;
         private WebClientHandler webClientHandler;
+
+        public string Url { get; set; }
       
         public StaticMapDataHandler()
         {
@@ -51,8 +53,8 @@ namespace MapdrawingTest.Web
 
         private bool LoadWebClientHandler()
         {
-            string url = String.Format(URL_TEMPLATE, this.dataId);
-            webClientHandler = new WebClientHandler(url);
+            Url = String.Format(URL_TEMPLATE, this.dataId);
+            webClientHandler = new WebClientHandler(Url);
             return IsSuccessful();
         }
     }
