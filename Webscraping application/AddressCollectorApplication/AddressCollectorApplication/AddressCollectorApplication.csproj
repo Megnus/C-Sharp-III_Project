@@ -50,7 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icons\Gakuseisean-Ivista-2-Start-Menu-Search.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Gakuseisean-Ivista-2-Start-Menu-Search.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
@@ -85,11 +85,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Data\StaticMapData.cs" />
-    <Compile Include="Web\PersonListInformationHandler.cs" />
-    <Compile Include="Web\SiteInformationHandler.cs" />
-    <Compile Include="Web\WebClientHandler.cs" />
-    <Page Include="MainWindow.xaml">
+    <Compile Include="Data access layer\StaticMapData.cs" />
+    <Compile Include="Business logic layer\PersonListInformationHandler.cs" />
+    <Compile Include="Business logic layer\SiteInformationHandler.cs" />
+    <Compile Include="Business logic layer\WebClientHandler.cs" />
+    <Page Include="Presentation layer\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -98,17 +98,17 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Address.cs" />
-    <Compile Include="Data\Person.cs" />
-    <Compile Include="Data\InformationContext.cs" />
-    <Compile Include="Data\Postal.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Data access layer\Address.cs" />
+    <Compile Include="Data access layer\Person.cs" />
+    <Compile Include="Data access layer\InformationContext.cs" />
+    <Compile Include="Data access layer\Postal.cs" />
+    <Compile Include="Presentation layer\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="View\MapRendering.cs" />
+    <Compile Include="Business logic layer\MapRenderingHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -137,7 +137,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\Gakuseisean-Ivista-2-Start-Menu-Search.ico" />
+    <Resource Include="Resources\Gakuseisean-Ivista-2-Start-Menu-Search.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -162,6 +162,7 @@
   <ItemGroup>
     <None Include="Resources\sweden-map.bmp" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

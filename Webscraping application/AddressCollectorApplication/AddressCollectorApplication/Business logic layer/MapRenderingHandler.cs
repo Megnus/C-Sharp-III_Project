@@ -17,38 +17,91 @@ using System.Windows.Interop;
 using System.IO;
 using System.Drawing.Imaging;
 
+/*
+ * Author:          Magnus Sundström
+ * Creation Date:   2016-07-22
+ * File:            MapRenderingHandler.cs
+ */
+
 namespace AddressCollectorApplication
 {
-    public class MapRendering
+    /// <summary>
+    /// Class for handling the rendering of the graphical map.
+    /// </summary>
+    public class MapRenderingHandler
     {
-        private WriteableBitmap writeableBitmap;
-        System.Windows.Controls.Image img;
         private static double north = 69.06;
         private static double south = 55.336944;
         private static double east = 24.150556;
         private static double west = 11.113056;
-        private ConcurrentQueue<System.Windows.Point> cq;
-        private bool enableRendering;
-        private Viewbox viewBox;
+        private System.Windows.Controls.Image img;
         private System.Drawing.Color pixelColor;
-
+        private WriteableBitmap writeableBitmap;
+        private ConcurrentQueue<System.Windows.Point> cq;
         private CrossHair crossHair;
+        private bool enableRendering;
 
+        /// <summary>
+        /// Overloading constructor.
+        /// </summary>
+        /// <param name="image">The image to be handled.</param>
+        /// <param name="canvas">The canvas to be handled.</param>
+        /// <param name="pixelColor">The color of the pixel.</param>
+        /// <param name="bitmap">The bitmap to be set.</param>
+        /// <param name="width">The width of the bitmap.</param>
+        /// <param name="height">The height of the bitmap.</param>
+        public MapRenderingHandler(System.Windows.Controls.Image image, Canvas canvas, System.Drawing.Color pixelColor, int width, int height) :
+            this(image, canvas, pixelColor, new Bitmap(width, height)) { }
+
+        /// <summary>
+        /// The constructor of the class which initiates all the field variables.
+        /// </summary>
+        /// <param name="image">The image to be handled.</param>
+        /// <param name="canvas">The canvas to be handled.</param>
+        /// <param name="pixelColor">The color of the pixel.</param>
+        /// <param name="bitmap">The bitmap to be set.</param>
+        public MapRenderingHandler(System.Windows.Controls.Image image, Canvas canvas, System.Drawing.Color pixelColor, Bitmap bitmap)
+        {
+            LoadBitmap(bitmap);
+            img = image;
+            img.Source = writeableBitmap;
+            img.Stretch = Stretch.None;
+            img.HorizontalAlignment = HorizontalAlignment.Left;
+            img.VerticalAlignment = VerticalAlignment.Top;
+            cq = new ConcurrentQueue<System.Windows.Point>();
+            this.crossHair = new CrossHair(canvas);
+            this.pixelColor = pixelColor;
+        }
+
+        /// <summary>
+        /// Adds a coordinate to the que.
+        /// </summary>
+        /// <param name="p">The point to be added.</param>
         public void AddCoordinate(System.Windows.Point p)
         {
             cq.Enqueue(p);
         }
 
+        /// <summary>
+        /// Stops the rendering of the graphicla map.
+        /// </summary>
         public void StopRendering()
         {
             enableRendering = false;
         }
 
+        /// <summary>
+        /// Method to return the number of points in the que.
+        /// </summary>
+        /// <returns>The number of points in the que.</returns>
         public int QueueCount()
         {
             return cq.Count;
         }
 
+        /// <summary>
+        /// Starts the rendering of the graphical map.
+        /// </summary>
         public void StartRendering()
         {
             new Thread(() =>
@@ -71,6 +124,11 @@ namespace AddressCollectorApplication
             }).Start();
         }
 
+        /// <summary>
+        /// Transposes the point to a pixel coordinate in the map image.
+        /// </summary>
+        /// <param name="point">The point to transpose.</param>
+        /// <returns>The new point that represent a pixel on the image.</returns>
         private System.Drawing.Point TransForm(System.Windows.Point point)
         {
             return new System.Drawing.Point(
@@ -79,24 +137,35 @@ namespace AddressCollectorApplication
                 );
         }
 
+        /// <summary>
+        /// Method to set a pixel on the image.
+        /// </summary>
+        /// <param name="x">The x-coordinate for the pixel.</param>
+        /// <param name="y">The y-coordinate for the pixel.</param>
         public void Render(double x, double y)
         {
             System.Drawing.Point point = TransForm(new System.Windows.Point(x, y));
             Application.Current.Dispatcher.Invoke(() => SetPixel(point.X, point.Y, writeableBitmap, crossHair, pixelColor));
         }
 
-        // AddressCollectorApplication.Properties.Resources.sweden_map
+        /// <summary>
+        /// Method for createing a new bitmap.
+        /// </summary>
+        /// <param name="bitmapResource">The image in the resource.</param>
         public void LoadBitmap(Bitmap bitmapResource)
         {
             BitmapImage bitmapImage = null;
             Bitmap bitmap = null;
-            //bitmap = new BitmapImage(new Uri("C:\\Users\\Magnus\\Dropbox\\Kurser\\Programmering med C# III\\C-Sharp-III_Project\\Testing webscraping\\WebScrapeConsoleTest\\WebScrapeConsoleTest\\sweden-map.bmp", UriKind.Absolute));
-            // bitmap = new BitmapImage(new Uri("C:\\Users\\msundstr\\Pictures\\sweden-map.bmp", UriKind.Absolute));
             bitmap = new Bitmap(bitmapResource);
             bitmapImage = ToBitmapImage(bitmap);
             writeableBitmap = new WriteableBitmap(bitmapImage);
         }
 
+        /// <summary>
+        /// Method to converte a bitmap to a bitmapimage.
+        /// </summary>
+        /// <param name="bitmap">The bitmap to convert.</param>
+        /// <returns>The bitmap converted to a bitmapimage.</returns>
         private BitmapImage ToBitmapImage(Bitmap bitmap)
         {
             using (var memory = new MemoryStream())
@@ -114,24 +183,9 @@ namespace AddressCollectorApplication
             }
         }
 
-        public MapRendering(System.Windows.Controls.Image image, Canvas canvas, System.Drawing.Color pixelColor, int width, int height) :
-            this(image, canvas, pixelColor, new Bitmap(width, height)) { }
-
-        public MapRendering(System.Windows.Controls.Image image, Canvas canvas, System.Drawing.Color pixelColor, Bitmap bitmap)
-        {
-            //Bitmap flag = new Bitmap(bitmap.Width, bitmap.Height);
-            LoadBitmap(bitmap);
-            img = image;
-            img.Source = writeableBitmap;
-            img.Stretch = Stretch.None;
-            img.HorizontalAlignment = HorizontalAlignment.Left;
-            img.VerticalAlignment = VerticalAlignment.Top;
-            cq = new ConcurrentQueue<System.Windows.Point>();
-            this.crossHair = new CrossHair(canvas);
-            this.pixelColor = pixelColor;
-            //Application.Current.Dispatcher.Invoke(() => { LoadBitmap(bitmap); });
-        }
-
+        /// <summary>
+        /// Method to clear the bitmap.
+        /// </summary>
         public void ClearAll()
         {
             int w = writeableBitmap.PixelWidth;
@@ -140,13 +194,12 @@ namespace AddressCollectorApplication
             int widthInBytes = 4 * w;
             writeableBitmap.CopyPixels(pixelData, widthInBytes, 0);
             Array.Clear(pixelData, 0, w * h);
-            //for (int i = 0; i < pixelData.Length; ++i)
-            //{
-            //    pixelData[i] ^= 0x00ffffff;
-            //}
             writeableBitmap.WritePixels(new Int32Rect(0, 0, w, h), pixelData, widthInBytes, 0);
         }
 
+        /// <summary>
+        /// Action for setting a pixel on the bitmap.
+        /// </summary>
         Action<int, int, WriteableBitmap, CrossHair, System.Drawing.Color> SetPixel = (x, y, wbm, ch, color) =>
         {
             wbm.Lock();
@@ -164,20 +217,30 @@ namespace AddressCollectorApplication
             }
         };
 
+        /// <summary>
+        /// Method for setting the crosshair position.
+        /// </summary>
+        /// <param name="x">The x-coordinate for the pixel.</param>
+        /// <param name="y">The y-coordiante for the pixel.</param>
         public void SetCrossHairPosition(double x, double y)
         {
             System.Drawing.Point point = TransForm(new System.Windows.Point(x, y));
             this.crossHair.SetPosition(new System.Windows.Point(point.X, point.Y));
         }
 
+        /// <summary>
+        /// Method for setting the visibility of the crosshair.
+        /// </summary>
+        /// <param name="visible"></param>
         public void SetCrossHairVisibility(bool visible)
         {
             this.crossHair.SetVisibility(visible);
         }
-
-        //public void 
     }
 
+    /// <summary>
+    /// Class for handling the graphical rendering of the crosshair.
+    /// </summary>
     public class CrossHair
     {
         private Line firstLine;
@@ -186,6 +249,10 @@ namespace AddressCollectorApplication
         private Canvas canvas;
         private bool isVisible;
 
+        /// <summary>
+        /// The constructor of the class which initiates all the field variables.
+        /// </summary>
+        /// <param name="canvas">The canvas to be handled.</param>
         public CrossHair(Canvas canvas)
         {
             this.canvas = canvas;
@@ -212,6 +279,10 @@ namespace AddressCollectorApplication
             canvas.Children.Add(secondLine);
         }
 
+        /// <summary>
+        /// Method for setting the position of the crosshair.
+        /// </summary>
+        /// <param name="point">The coordinate for the crosshair.</param>
         public void SetPosition(System.Windows.Point point)
         {
             firstLine.X1 = -10 + point.X;
@@ -225,6 +296,10 @@ namespace AddressCollectorApplication
             secondLine.Y2 = 10 + point.Y;
         }
 
+        /// <summary>
+        /// Sets the visibility of the crosshair.
+        /// </summary>
+        /// <param name="visible"></param>
         public void SetVisibility(bool visible)
         {
             isVisible = visible;
@@ -232,6 +307,9 @@ namespace AddressCollectorApplication
             secondLine.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
         }
 
+        /// <summary>
+        /// Read-only property for the visibilty of the crosshair.
+        /// </summary>
         public bool IsVisible
         {
             get

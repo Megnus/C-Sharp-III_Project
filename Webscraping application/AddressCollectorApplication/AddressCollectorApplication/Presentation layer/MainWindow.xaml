@@ -18,10 +18,10 @@
         <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="704" VerticalAlignment="Top" Width="310" Margin="20,37,10,10"/>
         <Canvas x:Name="canvas_Copy" HorizontalAlignment="Left" Height="772" VerticalAlignment="Top" Width="310" Margin="20,37,0,0">
             <Frame Height="783" Width="330" BorderThickness="0,0,1,0" BorderBrush="#FFE8E8E8" Canvas.Top="-11" Canvas.Left="-18" />
-            <ProgressBar x:Name="mapPixelProgressBar" Height="14" Canvas.Top="733" Width="290" Maximum="1000" />
+            <ProgressBar x:Name="mapPixelProgressBar" Height="14" Canvas.Top="733" Width="290" Maximum="1000" Visibility="Hidden" />
         </Canvas>
         <TabControl x:Name="tabControl" Margin="333,25,0,0" BorderBrush="{x:Null}" Background="{x:Null}">
-            <TabItem x:Name="webscrapingTab" Header="Webscaping progress" GotFocus="TabItem_GotFocus" IsHitTestVisible="True" Visibility="Visible">
+            <TabItem x:Name="webscrapingTab" Header="Webscaping progress" GotFocus="TabItem_GotFocus" IsHitTestVisible="True" Visibility="Hidden">
                 <Grid>
                     <Label Content="URL Id:" HorizontalAlignment="Left" Margin="38,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28" HorizontalContentAlignment="Right"/>
                     <Label Content="Id data site address:" HorizontalAlignment="Left" Margin="38,38,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="154" Height="28" HorizontalContentAlignment="Right"/>
@@ -33,6 +33,11 @@
                     <Label x:Name="lblAddressData" HorizontalAlignment="Left" Margin="210,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Height="28"/>
                     <Label x:Name="lblNumberOfRecords" HorizontalAlignment="Left" Margin="210,94,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.434,0.25" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Height="28"/>
                     <ListBox Name="staticMapListbox" HorizontalContentAlignment="Stretch" Margin="-10,200,-10,-10" RenderTransformOrigin="0.5,0.5" FontSize="9" BorderBrush="#FFE8E8E8">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,2">
@@ -85,7 +90,7 @@
                     <ProgressBar x:Name="idBufferProgressBar" HorizontalAlignment="Left" Height="14" Margin="214,131,0,0" VerticalAlignment="Top" Width="290"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="searchTab" Header="Address search" GotFocus="TabItem_GotFocus" Visibility="Visible" >
+            <TabItem x:Name="searchTab" Header="Address search" GotFocus="TabItem_GotFocus" Visibility="Hidden" >
                 <Grid Margin="0,0,0,-15">
                     <Label Content="Name" Height="25" Width="154" Margin="38,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Right" />
                     <Label Content="Phone" Height="25" Width="154" Margin="38,38,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Right" />
@@ -111,25 +116,25 @@
                             <DataTemplate>
                                 <Grid Margin="0,2">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="60" />
-                                        <ColumnDefinition Width="140" />
-                                        <ColumnDefinition Width="80" />
                                         <ColumnDefinition Width="70" />
+                                        <ColumnDefinition Width="130" />
                                         <ColumnDefinition Width="100" />
-                                        <ColumnDefinition Width="100" />
-                                        <ColumnDefinition Width="100" />
-                                        <ColumnDefinition Width="60" />
                                         <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="130" />
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="100" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Id}" />
-                                    <TextBlock Grid.Column="1" Text="{Binding Name}" />
-                                    <TextBlock Grid.Column="2" Text="{Binding Phone}" />
-                                    <TextBlock Grid.Column="3" Text="{Binding Birthday}" />
-                                    <TextBlock Grid.Column="4" Text="{Binding Addr1}" />
-                                    <TextBlock Grid.Column="5" Text="{Binding CoordX}" />
-                                    <TextBlock Grid.Column="6" Text="{Binding CoordY}" />
-                                    <TextBlock Grid.Column="7" Text="{Binding PostalCode}" />
-                                    <TextBlock Grid.Column="8" Text="{Binding City}" />
+                                    <TextBlock Grid.Column="0" Text="{Binding Id}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="2" Text="{Binding Phone}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="3" Text="{Binding Birthday}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="4" Text="{Binding Addr1}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="5" Text="{Binding CoordX}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="6" Text="{Binding CoordY}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="7" Text="{Binding PostalCode}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="8" Text="{Binding City}" HorizontalAlignment="Right" />
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

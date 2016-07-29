@@ -20,13 +20,14 @@ using AddressCollectorApplication.Web;
 using AddressCollectorApplication.Data;
 using System.Text.RegularExpressions;
 using System.Globalization;
-
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Concurrent;
-//using System.Drawing;
+
+/*
+ * Author:          Magnus Sundström
+ * Creation Date:   2016-07-22
+ * File:            MainWindow.cs
+ */
 
 namespace AddressCollectorApplication
 {
@@ -41,8 +42,8 @@ namespace AddressCollectorApplication
         private const string TELEPHONE_REGEX = "(?<=\"telephone\">).+?(?=</li>)";
         private const string LINEFEED_REGEX = "\n";
         //https://msdn.microsoft.com/en-us/library/system.windows.media.imaging.writeablebitmap(VS.85).aspx
-        MapRendering populationenRendering;
-        MapRendering populationenRendering_Copy;
+        MapRenderingHandler populationenRendering;
+        MapRenderingHandler populationenRendering_Copy;
         private Queue<StaticMapData> staticMapDataQueue;
         private ConcurrentQueue<StaticMapData> searchConcurrentQueue;
         private InformationContext datab;
@@ -50,26 +51,36 @@ namespace AddressCollectorApplication
         private PersonListInformationHandler personListInformationHandler;
         private StaticMapDataHandler siteInformationHandler;
         private bool runWebScraping = true;
+        private bool enableUncheckingMenuItem = true;
         private TabSelected tabSelected;
 
+        /// <summary>
+        /// Enum for controlling the tabselection.
+        /// </summary>
         enum TabSelected
         {
             Webscraping,
             Search
         }
 
+        /// <summary>
+        /// The constructior of the mainwindow which initiates and creates the necessary objects.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
             System.Drawing.Bitmap bitmap = AddressCollectorApplication.Properties.Resources.sweden_map;
-            populationenRendering = new MapRendering(mapImage, canvas, System.Drawing.Color.Red, bitmap);
-            populationenRendering_Copy = new MapRendering(mapImage_Copy, canvas_Copy, System.Drawing.Color.Blue, bitmap.Width, bitmap.Height);
+            populationenRendering = new MapRenderingHandler(mapImage, canvas, System.Drawing.Color.Red, bitmap);
+            populationenRendering_Copy = new MapRenderingHandler(mapImage_Copy, canvas_Copy, System.Drawing.Color.Blue, bitmap.Width, bitmap.Height);
 
             this.personListInformationHandler = new PersonListInformationHandler();
             this.siteInformationHandler = new StaticMapDataHandler();
             this.tabSelected = TabSelected.Webscraping;
         }
 
+        /// <summary>
+        /// Method for handeling the scraping a site.
+        /// </summary>
         public void WebScraping()
         {
             runWebScraping = true;
@@ -127,6 +138,13 @@ namespace AddressCollectorApplication
             }
         }
 
+        /// <summary>
+        /// Method for extracting the address information.
+        /// </summary>
+        /// <param name="infoHandler">The staticmapdatahandler.</param>
+        /// <param name="urlIndex">The index of the page.</param>
+        /// <param name="pageNumber">The number of the page.</param>
+        /// <param name="dataId">The id of the data.</param>
         private void HandleUserInformation(StaticMapDataHandler infoHandler, int urlIndex, int pageNumber, int dataId)
         {
             double x, y;
@@ -159,6 +177,10 @@ namespace AddressCollectorApplication
             }
         }
 
+        /// <summary>
+        /// Method for populating the database with address data.
+        /// </summary>
+        /// <param name="staticMapData">The staticdata object.</param>
         private void UpdateDatabase(StaticMapData staticMapData)
         {
             using (var context = new InformationContext())
@@ -198,6 +220,10 @@ namespace AddressCollectorApplication
             }
         }
 
+        /// <summary>
+        /// Method for displaying the staticmapdata on the listbox.
+        /// </summary>
+        /// <param name="staticMapData">The staicmapdata object.</param>
         private void PrintListBox(StaticMapData staticMapData)
         {
             Dispatcher.Invoke(() =>
@@ -214,9 +240,10 @@ namespace AddressCollectorApplication
         }
 
         /// <summary>
-        /// http://blogs.msdn.com/b/adonet/archive/2011/01/31/using-dbcontext-in-ef-feature-ctp5-part-6-loading-related-entities.aspx
+        /// Method for hadeling the search function.
         /// </summary>
-        private void SearchForName()
+        /// <remarks>http://blogs.msdn.com/b/adonet/archive/2011/01/31/using-dbcontext-in-ef-feature-ctp5-part-6-loading-related-entities.aspx</remarks>
+        private void SearchHandler()
         {
             populationenRendering_Copy.StartRendering();
 
@@ -287,6 +314,11 @@ namespace AddressCollectorApplication
             // Debug.WriteLine("addresses.FirstOrDefault().Street");
         }
 
+        /// <summary>
+        /// Method event for intitilazing some of the objects when windows is loading.
+        /// </summary>
+        /// <param name="sender">The caller or the sender object which is the object to fire the event.</param>
+        /// <param name="e">Arguments sent from the caller.</param>
         private void mainWindow_Initialized(object sender, EventArgs e)
         {
             staticMapDataQueue = new Queue<StaticMapData>();
@@ -298,12 +330,22 @@ namespace AddressCollectorApplication
             searchListbox.Items.Refresh();
         }
 
+        /// <summary>
+        /// Method fired from the search button.
+        /// </summary>
+        /// <param name="sender">The caller or the sender object which is the object to fire the event.</param>
+        /// <param name="e">Arguments sent from the caller.</param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             populationenRendering_Copy.ClearAll();
-            SearchForName();
+            SearchHandler();
         }
 
+        /// <summary>
+        /// Method fired whene the tab is on focus.
+        /// </summary>
+        /// <param name="sender">The caller or the sender object which is the object to fire the event.</param>
+        /// <param name="e">Arguments sent from the caller.</param>
         private void TabItem_GotFocus(object sender, RoutedEventArgs e)
         {
             if (sender.Equals(searchTab))
@@ -320,6 +362,12 @@ namespace AddressCollectorApplication
             }
         }
 
+        /// <summary>
+        /// Method for rendering a cross on the map when select a address. 
+        /// The cross shows the coordinate of the address.
+        /// </summary>
+        /// <param name="sender">The caller or the sender object which is the object to fire the event.</param>
+        /// <param name="e">Arguments sent from the caller.</param>
         private void searchListbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (searchListbox.Items.Count > 0)
@@ -335,6 +383,11 @@ namespace AddressCollectorApplication
             }
         }
 
+        /// <summary>
+        /// Method which is executed when the window is closing.
+        /// </summary>
+        /// <param name="sender">The caller or the sender object which is the object to fire the event.</param>
+        /// <param name="e">Arguments sent from the caller.</param>
         private void mainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             populationenRendering.StopRendering();
@@ -342,6 +395,11 @@ namespace AddressCollectorApplication
             Environment.Exit(0);
         }
 
+        /// <summary>
+        /// Method fired when the menu is checked.
+        /// </summary>
+        /// <param name="sender">The caller or the sender object which is the object to fire the event.</param>
+        /// <param name="e">Arguments sent from the caller.</param>
         private void MenuItem_Checked(object sender, RoutedEventArgs e)
         {
             Thread thread = new Thread(() => WebScraping());
@@ -351,6 +409,11 @@ namespace AddressCollectorApplication
             populationenRendering.StartRendering();
         }
 
+        /// <summary>
+        /// Method fired when the menu is unchecked.
+        /// </summary>
+        /// <param name="sender">The caller or the sender object which is the object to fire the event.</param>
+        /// <param name="e">Arguments sent from the caller.</param>
         private void MenuItem_Unchecked(object sender, RoutedEventArgs e)
         {
             runWebScraping = false;
@@ -358,6 +421,11 @@ namespace AddressCollectorApplication
             populationenRendering.StopRendering();
         }
 
+        /// <summary>
+        /// Method fired whene the viewed is checked and changed.
+        /// </summary>
+        /// <param name="sender">The caller or the sender object which is the object to fire the event.</param>
+        /// <param name="e">Arguments sent from the caller.</param>
         private void View_Checked(object sender, RoutedEventArgs e)
         {
             if (webscrapingTab == null || webscrapingTab == null)
@@ -382,8 +450,11 @@ namespace AddressCollectorApplication
             }
         }
 
-        bool enableUncheckingMenuItem = true;
-
+        /// <summary>
+        /// Method fired when the view is unchecked.
+        /// </summary>
+        /// <param name="sender">The caller or the sender object which is the object to fire the event.</param>
+        /// <param name="e">Arguments sent from the caller.</param>
         private void View_Unchecked(object sender, RoutedEventArgs e)
         {
             if (enableUncheckingMenuItem)

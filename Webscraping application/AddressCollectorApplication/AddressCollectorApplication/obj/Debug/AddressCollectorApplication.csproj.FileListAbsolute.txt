@@ -47,10 +47,10 @@ C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Webs
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Webscraping application\AddressCollectorApplication\AddressCollectorApplication\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Webscraping application\AddressCollectorApplication\AddressCollectorApplication\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Webscraping application\AddressCollectorApplication\AddressCollectorApplication\obj\Debug\AddressCollectorApplication.csprojResolveAssemblyReference.cache
-C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Webscraping application\AddressCollectorApplication\AddressCollectorApplication\obj\Debug\MainWindow.baml
-C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Webscraping application\AddressCollectorApplication\AddressCollectorApplication\obj\Debug\MainWindow.g.cs
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Webscraping application\AddressCollectorApplication\AddressCollectorApplication\obj\Debug\App.g.cs
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Webscraping application\AddressCollectorApplication\AddressCollectorApplication\obj\Debug\AddressCollectorApplication_MarkupCompile.cache
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Webscraping application\AddressCollectorApplication\AddressCollectorApplication\obj\Debug\AddressCollectorApplication.g.resources
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Webscraping application\AddressCollectorApplication\AddressCollectorApplication\obj\Debug\AddressCollectorApplication.Properties.Resources.resources
 C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Webscraping application\AddressCollectorApplication\AddressCollectorApplication\obj\Debug\AddressCollectorApplication.csproj.GenerateResource.Cache
+C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Webscraping application\AddressCollectorApplication\AddressCollectorApplication\obj\Debug\Presentation layer\MainWindow.baml
+C:\Users\Magnus\Dropbox\Kurser\Programmering med C# III\C-Sharp-III_Project\Webscraping application\AddressCollectorApplication\AddressCollectorApplication\obj\Debug\Presentation layer\MainWindow.g.cs
